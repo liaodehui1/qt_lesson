@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>html5打击乐</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- 音乐键盘 -->
+    <div class="keys">
+        <div class="key" data-key="65">
+            <div>A</div>
+            <span class="sound">clap</span>
+        </div>
+        <div class="key" data-key="83">
+            <div>S</div>
+            <span class="sound">hihat</span>
+        </div>
+        <div class="key" data-key="68">
+            <div>D</div>
+            <span class="sound">kick</span>
+        </div>
+        <div class="key" data-key="70">
+            <div>F</div>
+            <span class="sound">openhat</span>
+        </div>
+        <div class="key" data-key="71">
+            <div>G</div>
+            <span class="sound">boom</span>
+        </div>
+        <div class="key" data-key="72">
+            <div>H</div>
+            <span class="sound">ride</span>
+        </div>
+        <div class="key" data-key="74">
+            <div>J</div>
+            <span class="sound">snare</span>
+        </div>
+        <div class="key" data-key="75">
+            <div>K</div>
+            <span class="sound">tom</span>
+        </div>
+        <div class="key" data-key="76">
+            <div>L</div>
+            <span class="sound">tink</span>
+        </div>
+    </div>
+    <audio data-key="65" src="./sounds/clap.wav" ></audio>
+    <audio data-key="83"  src="./sounds/hihat.wav"></audio>
+    <audio data-key="68" src="./sounds/kick.wav"></audio>
+    <audio data-key="70" src="./sounds/openhat.wav" ></audio>
+    <audio data-key="71" src="./sounds/boom.wav" ></audio>
+    <audio data-key="72" src="./sounds/ride.wav"></audio>
+    <audio data-key="74" src="./sounds/snare.wav"></audio>
+    <audio data-key="75" src="./sounds/tom.wav"></audio>
+    <audio data-key="76" src="./sounds/tink.wav"></audio>
+    
+    <script>
+        const keys = document.querySelectorAll('.key');
+        for(let i=0;i<keys.length;i++){
+            console.log(keys[i]);
+            keys[i].addEventListener('transitionend',function(event){
+                event.target.classList.remove('playing');
+            })
+        }
+        // 浏览器窗口
+        window.addEventListener
+        ('keydown',function(event){
+            // 1. 按哪个键 API可以给你的 键值
+            // console.log(event);
+            const keyCode=event.keyCode;
+            console.log(keyCode);
+            // 2. 相应的声音
+            // 找到音乐元素 css querySelector audio
+            // id 太多 影响页面性能
+            const audioEle = document.querySelector('audio[data-key="'+keyCode+'"]');
+            const keyEle = document.querySelector('.key[data-key="'+keyCode+'"]');
+            // 3. 播放
+            // console.log("按键了");
+            // const clapAudio=document.getElementById('clap');
+            // clapAudio.play();
+            if(audioEle){
+                keyEle.classList.add('playing');
+                audioEle.currentTime=0;
+                audioEle.play();
+            }
+        })
+        // console.log(keys);
+    </script>
+</body>
+</html>
