@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="./style.css">
     <title>猫眼电影</title>
 </head>
+
 <body>
     <header class="nav">
         <i class="arrow-left"></i>
@@ -38,31 +40,103 @@
                                 <div class="rating" id="rating">
                                     <span class="rating-score"></span>
                                 </div>
-                            </div>
-                            <div class="score-num">
-                                (<span></span>人评)
+                                <div class="score-num">
+                                    (<span></span>人评)
+                                </div>
                             </div>
                         </div>
+                        <div class="movie-detail">
+                            <div class="movie-type"></div>
+                            <div class="address-time">
+                                <span class="address"></span>/
+                                <span class="time"></span>分钟
+                            </div>
+                            <p class="date"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="operating flex">
+                    <div class="movie-watch flex1" id="movie-watch">
+                        <img src="./images/heart.png" alt="">
+                        <span>想看</span>
+                    </div>
+                    <div class="movie-mark flex1">
+                        <img src="./images/star2.png" alt="">
+                        <span>评分</span>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- toast -->
+        <div id="toast">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast">
+                <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                <p class="weui-toast__content"></p>
+            </div>
+        </div>
     </div>
     <script>
-        (function(){
+        (function () {
             $.ajax({
-                url:'https://www.easy-mock.com/mock/5d2ed7bf7f168b5e40d35f43/movie/maoyandianying',
-                type:'get',
-                success:function(res){
+                url: 'https://www.easy-mock.com/mock/5d2ed7bf7f168b5e40d35f43/movie/maoyandianying',
+                type: 'get',
+                success: function (res) {
                     console.log(res)
-                    $('#moviePic').attr('src',res.data.moviePic)
+                    $('.movie-background').css('background-image', `url(${res.data.moviePic})`)
+                    $('#moviePic').attr('src', res.data.moviePic)
                     $('.movie-name span').html(res.data.name)
                     $('.movie-ename span').html(res.data.nameEnglish)
+                    star(res.data.star)
+                    $('.rating-score').html(res.data.grade)
                     $('.score-num span').html(res.data.people)
-                    $('.movie-background').css('background-image',`url(${res.data.moviePic})`)
+                    $('.movie-type').html(res.data.type)
+                    $('.address').html(res.data.where)
+                    $('.time').html(res.data.time)
+                    $('.date').html(res.data.date)
                 }
             })
-        })() 
+
+            function star(s) {
+                let num = Math.floor(s)//向下取整 2.9->2
+                let white = Math.floor(5 - s)
+                for (let i = 0; i < white; i++) {
+                    $('#rating').prepend('<img class="img" src="./images/star2.png">')
+                }
+                if (s > num) {
+                    $('#rating').prepend('<img class="img" src="./images/star-h.png">')
+                }
+                for (let i = 0; i < num; i++) {
+                    $('#rating').prepend('<img class="img" src="./images/star.png">')
+                }
+            }
+        })()
+        // 原生js
+        // var movie_watch=document.getElementById('movie-watch')
+        // var toast=document.getElementById('toast')
+        // movie_watch.addEventListener('click',function(){
+        //     toast.classList.add('active')
+        //     setTimeout(function(){
+        //         toast.classList.remove('active')
+        //     },1000)
+        // })
+        // jquery
+        $('#movie-watch').click(function () {
+            if ($(this).hasClass('show')) {//contains('show')
+                $(this).removeClass('show')
+                $('#movie-watch img').attr('src', './images/heart.png')
+                $('#toast .weui-toast__content').html('已取消想看')
+            } else {
+                $('#toast .weui-toast__content').html('已标记为想看')
+                $('#movie-watch').addClass('show')
+                $('#movie-watch img').attr('src', './images/heart1.png')
+            }
+            $('#toast').addClass('active')
+            setTimeout(() => {
+                $('#toast').removeClass('active')
+            }, 1000)
+        })
     </script>
 </body>
+
 </html>
