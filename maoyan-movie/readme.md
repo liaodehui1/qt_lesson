@@ -24,3 +24,29 @@
 - 原生js判断是否存在某个类
     1. 变量.classList.contains('类名')
     2. 变量.getAttribute('class').indexOf('类名') > -1
+- .类名1.类名2
+    样式属于类名2
+    类名1与类名2同级
+- for in/of
+    推荐 for...in遍历对象 for...of遍历数组
+    1. for...in遍历遍历数组时会遍历自定义属性且顺序不一定
+    2. for...of遍历数组时，item为数组每一项的值；遍历对象会报错
+    3. for...in遍历时，item为对象的key，为数组的index
+    4. for...in为RS5特性，for...of为ES6特性
+    5. for...in遍历对象 
+        for(let item in obj){console.log(obj[key])//console.log(eval('obj.'+item))} 
+        obj.item错误，没有item属性 
+        eval计算表达式，会取出item值 
+    6. for...in遍历数组
+        for(let index in arr){console.log(arr[index])}
+    7. for...of遍历数组
+        for(let item of arr){console.log(item)}
+    8. for...of遍历对象
+        for(let key of Object.keys(obj)){console.log(obj[key])}
+        Object.keys(obj)返回obj对象中的属性组成的数组
+- white-space
+    1. 默认normal 空白忽略
+    2. nowrap 文本不换行
+    3. pre 空白保留 空白符(换行符、空格、tab)
+- !important
+    提升属性优先级至最高 放在属性值结束的;前

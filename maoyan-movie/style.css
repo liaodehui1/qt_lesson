@@ -8,6 +8,14 @@ body {
 .flex1 {
   flex: 1;
 }
+.section-title {
+  font-size: 17px;
+  color: #000;
+}
+.action-list,
+.section-title {
+  padding-left: 0.3rem;
+}
 .nav {
   height: 1.067rem;
   font-size: 18px;
@@ -176,6 +184,89 @@ body {
 }
 .page .movie-header .movie .operating .movie-mark img {
   width: 18px;
+}
+.page .section-expander {
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.page .section-separate {
+  padding-top: 0.4rem;
+  margin-bottom: 0.3rem;
+  border-top: 2px solid #e5e5e5;
+  border-bottom: 2px solid #e5e5e5;
+}
+.page .section-separate .text-expander__content.close {
+  min-height: 65px;
+  display: -webkit-box /*类似flex*/;
+  overflow: hidden /*内容超出则隐藏*/;
+  text-overflow: ellipsis /*剩余内容用点表示*/;
+  word-break: break-all /*break-all单词内换行 keep-all标点符号处换行*/;
+  -webkit-box-orient: vertical /*子元素垂直排列*/;
+  -webkit-line-clamp: 3 /*几行后开始换行*/;
+}
+.page .section-separate .text-expander__button {
+  height: 0.7rem;
+  text-align: center;
+}
+.page .section-separate .text-expander__button .icon-chevron__down {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border: 2px solid #aaa;
+  border-width: 0 0 2px 2px;
+  transform: rotateZ(-45deg);
+  box-sizing: border-box;
+  transition: transform 0.5s;
+}
+.page .section-separate .text-expander__button .icon-chevron__down.up {
+  transform: rotateZ(135deg);
+}
+.page .section-separate .movie-celebrities {
+  width: 100%;
+  padding: 0.3rem 0.3rem 0.1rem 0.3rem;
+  overflow-x: scroll;
+  white-space: nowrap /*文本不换行*/;
+  box-sizing: border-box;
+}
+.page .section-separate .movie-celebrities li {
+  text-align: center;
+  display: inline-block;
+  padding: 0.04rem;
+}
+.page .section-separate .movie-celebrities li .link {
+  color: #000;
+}
+.page .section-separate .movie-celebrities li .link .movie-celebrities__pic {
+  width: 1.7334rem;
+  height: 2.4rem;
+  margin: 0.05rem;
+}
+.page .section-separate .movie-celebrities li .link .movie-celebrities__pic img {
+  width: 100%;
+}
+.page .section-separate .movie-celebrities li span {
+  display: block;
+  font-size: 0.2rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.page .section-separate .movie-celebrities li .movie-celebrities-roles {
+  color: #999;
+}
+.page .movie-booking {
+  padding-bottom: 0.4rem;
+}
+.page .movie-booking .weui-flex {
+  text-align: center;
+}
+.page .movie-booking .weui-flex .placeholder span {
+  font-size: 24px;
+  color: #d96a3d;
+}
+.page .movie-booking .weui-flex .placeholder p {
+  color: #bababa;
+  margin-top: 0.1rem;
 }
 #toast {
   display: none;

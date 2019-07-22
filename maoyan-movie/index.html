@@ -19,6 +19,7 @@
         <span>影片详情</span>
     </header>
     <div class="page">
+        <!-- section1 -->
         <section class="movie-header">
             <div class="movie">
                 <div class="movie-background"></div>
@@ -67,6 +68,56 @@
                 </div>
             </div>
         </section>
+        <!-- section2 -->
+        <section class="section-separate section-expander">
+            <div class="text-expander" id="text-expander">
+                <div class="text-expander__content close">
+                    <p></p>
+                </div>
+                <div class="text-expander__button">
+                    <i class="icon-chevron__down"></i>
+                </div>
+            </div>
+        </section>
+        <!-- section3 -->
+        <section class="section-separate">
+            <p class="action-list section-title">演职人员</p>
+            <ul class="movie-celebrities">
+                <!-- <li>
+                    <a href="#" class="link">
+                        <div class="movie-celebrities__pic">
+                            <img src="" alt="">
+                        </div>
+                    </a>
+                    <span class="movie-celebrities-nick"></span>
+                    <span class="movie-celebrities-roles"></span>
+                </li> -->
+            </ul>
+        </section>
+        <!-- section4 -->
+        <section class="movie-booking section-separate">
+            <p class="section-title">票房</p>
+            <div class="weui-flex">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <span id="ranking"></span>
+                            <p>昨日票房排行</p>
+                        </div>
+                    </div>
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <span id="bookingWeek"></span>
+                            <p>首周票房（万）</p>
+                        </div>
+                    </div>
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <span id="bookingTotal"></span>
+                            <p>累计票房（万）</p>
+                        </div>
+                    </div>
+                </div>
+        </section>
         <!-- toast -->
         <div id="toast">
             <div class="weui-mask_transparent"></div>
@@ -94,6 +145,9 @@
                     $('.address').html(res.data.where)
                     $('.time').html(res.data.time)
                     $('.date').html(res.data.date)
+                    $('.text-expander__content p').html(res.data.desc)
+                    celebrity(res.data.person)
+                    booking(res.data.booking)
                 }
             })
 
@@ -109,6 +163,31 @@
                 for (let i = 0; i < num; i++) {
                     $('#rating').prepend('<img class="img" src="./images/star.png">')
                 }
+            }
+
+            //演员表
+            //${}为ES6
+            function celebrity(e) {
+                for (let n of e) {
+                    $('.movie-celebrities').append(
+                        `<li>
+                    <a href="#" class="link">
+                        <div class="movie-celebrities__pic">
+                            <img src="${n.avatal}" alt="">
+                        </div>
+                    </a>
+                    <span class="movie-celebrities-nick">${n.name}</span>
+                    <span class="movie-celebrities-roles">${n.sort}</span>
+                    </li>`
+                    )
+                }
+            }
+
+            //票房
+            function booking(e){
+                $('#ranking').html(e.ranking)
+                $('#bookingWeek').html(e.bookingWeek)
+                $('#bookingTotal').html(e.bookingTotal)
             }
         })()
         // 原生js
@@ -135,6 +214,16 @@
             setTimeout(() => {
                 $('#toast').removeClass('active')
             }, 1000)
+        })
+
+        $('#text-expander').click(function () {
+            if ($('.text-expander__content').hasClass('close')) {
+                $('.text-expander__button i').addClass('up')
+                $('.text-expander__content').removeClass('close')
+            } else {
+                $('.text-expander__button i').removeClass('up')
+                $('.text-expander__content').addClass('close')
+            }
         })
     </script>
 </body>
