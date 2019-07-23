@@ -9,6 +9,7 @@
     <link href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/jquery-weui.min.js"></script>
     <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.4/??flexible_css.js,flexible.js"></script>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1312188_y4c50umazdk.css">
     <link rel="stylesheet" href="./style.css">
     <title>猫眼电影</title>
 </head>
@@ -98,25 +99,92 @@
         <section class="movie-booking section-separate">
             <p class="section-title">票房</p>
             <div class="weui-flex">
-                    <div class="weui-flex__item">
-                        <div class="placeholder">
-                            <span id="ranking"></span>
-                            <p>昨日票房排行</p>
-                        </div>
-                    </div>
-                    <div class="weui-flex__item">
-                        <div class="placeholder">
-                            <span id="bookingWeek"></span>
-                            <p>首周票房（万）</p>
-                        </div>
-                    </div>
-                    <div class="weui-flex__item">
-                        <div class="placeholder">
-                            <span id="bookingTotal"></span>
-                            <p>累计票房（万）</p>
-                        </div>
+                <div class="weui-flex__item">
+                    <div class="placeholder">
+                        <span id="ranking"></span>
+                        <p>昨日票房排行</p>
                     </div>
                 </div>
+                <div class="weui-flex__item">
+                    <div class="placeholder">
+                        <span id="bookingWeek"></span>
+                        <p>首周票房（万）</p>
+                    </div>
+                </div>
+                <div class="weui-flex__item">
+                    <div class="placeholder">
+                        <span id="bookingTotal"></span>
+                        <p>累计票房（万）</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- section5 -->
+        <section class="movie-photo section-separate">
+            <p class="action-list section-title">视频和剧照</p>
+            <ul class="movie-photo__lists">
+            </ul>
+        </section>
+        <!-- section6 -->
+        <section class="section-separate section-expander clear-mb">
+            <p class="pos_r">讨论
+                <span class="join-comment">参与讨论</span>
+            </p>
+            <ul class="movie-comment">
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>全部</span>
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>好评</span>
+                        <span class="good"></span>
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>差评</span>
+                        <span class="bad"></span>
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>点映</span>
+                        <span class="dy"></span>
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>购票</span>
+                        <span class="bought"></span>
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>认证作者</span>
+                        <span class="author"></span>
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="comment-item__sort">
+                        <span>同城</span>
+                        <span class="sameCity"></span>
+                    </div>
+                </li>
+            </ul>
+        </section>
+        <!-- secion7 -->
+        <section class="section-separate section-expander clear-mb">
+            <p class="section-til">精选</p>
+            <ul class="chosen-comment" id="chosen-comment">
+            </ul>
+        </section>
+        <!-- section8 -->
+        <section class="view-allComments">
+            <a href="#">
+                <p>查看全部<span id="commentTotal"></span>条讨论 ></p>
+            </a>
         </section>
         <!-- toast -->
         <div id="toast">
@@ -148,6 +216,10 @@
                     $('.text-expander__content p').html(res.data.desc)
                     celebrity(res.data.person)
                     booking(res.data.booking)
+                    movie_photo__lists(res.data.pictures)
+                    commentNum(res.data.commentNum)
+                    comments(res.data.comment)
+                    $('#commentTotal').html(res.data.commentTotal)
                 }
             })
 
@@ -184,10 +256,76 @@
             }
 
             //票房
-            function booking(e){
+            function booking(e) {
                 $('#ranking').html(e.ranking)
                 $('#bookingWeek').html(e.bookingWeek)
                 $('#bookingTotal').html(e.bookingTotal)
+            }
+
+            //剧照
+            function movie_photo__lists(e) {
+                for (let n of e) {
+                    $('.movie-photo__lists').append(
+                        `<li class="stage-img-container">
+                    <a href="#" class="link">
+                        <div class="movie-celebrities__pic">
+                            <img src="${n}" alt="">
+                        </div>
+                    </a>
+                </li>`)
+                }
+            }
+
+            //评论数
+            function commentNum(e) {
+                $('.good').html(e.good)
+                $('.bad').html(e.bad)
+                $('.author').html(e.author)
+                $('.bought').html(e.bought)
+                $('.dy').html(e.dy)
+                $('.sameCity').html(e.sameCity)
+            }
+
+            //评论
+            function comments(e){
+                for(let n of e){
+                    $('#chosen-comment').append(` 
+                    <li class="chosen-comment__item">
+                        <div class="grader">
+                            <div class="grader-avatal">
+                                <img src=${n.avatal} alt="">
+                            </div>
+                            <div class="grader-detail">
+                                <div class="item-detail__hd">
+                                    <div>
+                                        <span class="nick-name">${n.nickName}</span>
+                                        <span class="level">
+                                            <img src=${n.lever} alt="">
+                                        </span>
+                                    </div>
+                                    <p class="item-score__desc">给这部电影打了<span>${n.grade}</span>分</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-content">
+                            <p>${n.detail}</p>
+                        </div>
+                        <div class="comment-detail">
+                            <span class="comment-date">${n.date}</span>
+                            <div class="opts">
+                                <div class="like">
+                                    <i class="iconfont iconzan"></i>
+                                    <span>${n.like}</span>
+                                </div>
+                                <div class="reply">
+                                    <i class="iconfont iconcomment1"></i>
+                                    <span>${n.reply}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>`)
+                }
+                $('#chosen-comment li:last-child .comment-detail').addClass('clear-bb')
             }
         })()
         // 原生js

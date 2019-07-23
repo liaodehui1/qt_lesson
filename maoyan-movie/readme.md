@@ -32,7 +32,7 @@
     1. for...in遍历遍历数组时会遍历自定义属性且顺序不一定
     2. for...of遍历数组时，item为数组每一项的值；遍历对象会报错
     3. for...in遍历时，item为对象的key，为数组的index
-    4. for...in为RS5特性，for...of为ES6特性
+    4. for...in为ES5特性，for...of为ES6特性
     5. for...in遍历对象 
         for(let item in obj){console.log(obj[key])//console.log(eval('obj.'+item))} 
         obj.item错误，没有item属性 
@@ -50,3 +50,4 @@
     3. pre 空白保留 空白符(换行符、空格、tab)
 - !important
     提升属性优先级至最高 放在属性值结束的;前
+- nick-name与图片对不齐，且两个span之间有空格，所以为父容器添加div再分别为子元素设置font-size消除空格
