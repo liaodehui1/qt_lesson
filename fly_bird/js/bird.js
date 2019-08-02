@@ -3,7 +3,7 @@ var bird={
     wingTimer:null,//小鸟翅膀摆动定时器
 
     div:document.createElement('div'),
-    showBird:function(parentObj){
+    showBird:function(){
         this.div.style.width='40px'
         this.div.style.height='28px'
         this.div.style.backgroundImage='url(img/bird0.png)'
@@ -13,7 +13,7 @@ var bird={
         this.div.style.top='200px'
         this.div.style.zIndex='1'
 
-        parentObj.appendChild(this.div)
+        jsWrapbg.appendChild(this.div)
     },
     fallSpeed:0,//小鸟下落速度
     flyBird:function(){//控制小鸟下落的函数

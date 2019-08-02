@@ -20,14 +20,44 @@
         <div id="grassLand1"></div>
         <!-- 草地2 -->
         <div id="grassLand2"></div>
+        <div id="score">
+            <div id="num1"></div>
+            <div id="num2"></div>
+            <div id="num3"></div>
+        </div>
+        <div id="gameOver">
+            <img src="img/game_over.jpg" alt="">
+            <div id="message">
+                <span id="medal"></span>
+                <span id="scores"></span>
+                <span id="best"></span>
+            </div>
+            <img src="img/ok.jpg" alt="" id="ok">
+        </div>
     </div>
     <script src="js/bird.js"></script>
+    <script src="js/baseObj.js"></script>
+    <script src="js/block.js"></script>
     <script>
         var jsWrapbg=document.getElementById('wrapbg')
         var jsHeadTitle=document.getElementById('headTitle')
         var jsHeadBird=document.getElementById('headBird')
         var jsGrassLand1=document.getElementById('grassLand1')
         var jsGrassLand2=document.getElementById('grassLand2')
+        var jsGameOver=document.getElementById('gameOver')
+        var jsMedal=document.getElementById('medal')
+        var jsScores=document.getElementById('scores')
+        var jsBest=document.getElementById('best')
+        var blocksArr=[]//用来存储Block的数据
+        var blockDistance=baseObj.randomNum(220,250)//管道间距
+
+        // 计分器
+        var jsScore=document.getElementById('score')
+        var jsNum1=document.getElementById('num1')
+        var jsNum2=document.getElementById('num2')
+        var jsNum3=document.getElementById('num3')
+        var score=0
+
         //让草地动起来
         var landTimer=setInterval(landRun,30)
         function landRun(){
@@ -39,6 +69,71 @@
             }
             jsGrassLand1.style.left=jsGrassLand1.offsetLeft-3+'px'
             jsGrassLand2.style.left=jsGrassLand2.offsetLeft-3+'px'
+
+            if(blocksArr.length){
+                for(let b of blocksArr){
+                    //管道移动
+                    b.moveBlock()
+                    //碰撞检测
+                    var x=baseObj.rectangleCrashExamine(b.downDivWrap,bird.div)
+                    var y=baseObj.rectangleCrashExamine(b.upDivWrap,bird.div)
+                    var z=bird.div.offsetTop>=390
+                    if(x||y||z){
+                        window.clearInterval(landTimer)
+                        bird.fallSpeed=0
+                        jsWrapbg.onclick=null
+                        jsScore.style.display='none'
+
+                        var s
+                        if(score<10){
+                            s=document.createTextNode('C')
+                            // jsMedal.innerHTML='C'
+                        }else if(score<100){
+                            s=document.createTextNode('B')
+                        }else{
+                            s=document.createTextNode('A')
+                        }
+                        jsMedal.appendChild(s)
+                        var s=document.createTextNode(score+'')
+                        jsScores.appendChild(s)
+                        // var max=document.createTextNode(baseObj.getBest(score)+'')
+                        // jsBest.appendChild(max)
+                        jsGameOver.style.display='block'
+                    }
+                }
+
+                //增加管道
+                if(blocksArr[blocksArr.length-1].downDivWrap.offsetLeft<(450-blockDistance)){
+                    blockDistance=baseObj.randomNum(230,250)
+                    var block=new Block()
+                    block.createBlock()
+                    blocksArr.push(block)
+                }
+
+                //计分
+                if(blocksArr[0].downDivWrap.offsetLeft==-12){
+                    score++
+                    if(score<10){
+                        jsNum1.style.backgroundImage=`url(img/${score}.jpg)`
+                    }else if(score<100){
+                        jsNum2.style.display='block'
+                        jsNum1.style.backgroundImage=`url(img/${parseInt(score/10)}.jpg)`
+                        jsNum2.style.backgroundImage=`url(img/${score%10}.jpg)`
+                    }else{
+                        jsNum3.style.display='block'
+                        jsNum1.style.backgroundImage=`url(img/${parseInt(score/100)}.jpg)`
+                        jsNum2.style.backgroundImage=`url(img/${parseInt(score/10)%10}.jpg)`
+                        jsNum3.style.backgroundImage=`url(img/${score%10}.jpg)`
+                    }
+                }
+
+                //去除管道
+                if(blocksArr[0].downDivWrap.offsetLeft<-50){
+                    jsWrapbg.removeChild(blocksArr[0].upDivWrap)
+                    jsWrapbg.removeChild(blocksArr[0].downDivWrap)
+                    blocksArr.shift()
+                }
+            }
         }
 
         //让标题动起来
@@ -62,12 +157,24 @@
             jsStartBtn.style.display='none'
             clearInterval(headWaveTimer)
             // console.log(jsWrapbg)
-            bird.showBird(jsWrapbg)//把小鸟插入到页面
+            bird.showBird()//把小鸟插入到页面
             bird.flyBird()//控制小鸟下落
             bird.wingWave()//逐帧动画控制小鸟煽动翅膀
-            jsWrapbg.onclick=function(){
+            jsWrapbg.onclick=function(){//点击屏幕小鸟上飞
                 bird.fallSpeed=-8
             }
+
+            //开始出现管道
+            var block=new Block()
+            block.createBlock()
+            blocksArr.push(block)
+
+            jsNum1.style.display='block'
+        }
+
+        jsOkBtn=document.getElementById('ok')
+        jsOkBtn.onclick=function(){
+            window.location.href='index.html'
         }
     </script>
 </body>
