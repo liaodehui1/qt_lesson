@@ -60,53 +60,70 @@ function TreeNode(val) {
 //     return headItem
 // }
 
+// /**
+//  * @param {number[]} preorder
+//  * @param {number[]} inorder
+//  * @return {TreeNode}
+//  * 耗时264ms
+//  */
+// var buildTree = function(preorder, inorder) {
+//     //传入空数组
+//     if(preorder.length==0||inorder.length==0){
+//         return null
+//     }
+//     let TN=new TreeNode(preorder[0])//根节点
+//     iteration(inorder,TN,preorder,preorder)//迭代
+//     return TN
+// }
 
+// function iteration(arr,TN,preL,preR){
+//     let flag1=iterationLeft(arr,TN,preL)
+//     let flag2=iterationRight(arr,TN,preR)
+//     if(!flag1&&!flag2){//叶子节点
+//         return null
+//     }
+// }
+
+// function iterationLeft(arr,TNL,pre){
+//     arr=arr.slice(0,arr.indexOf(TNL.val))//获取左子树,不影响原arr
+//     let preL=pre.splice(1,arr.length)//为下次寻找根节点,影响pre
+//     TNL.left=preL.length===0?null:new TreeNode(preL[0])//影响原TNL(此次调用传入的TN),正因此才使TN成为二叉树
+//     if(!TNL.left){
+//         return null
+//     }else{
+//         iteration(arr,TNL.left,preL,preL)
+//     }
+// }
+// function iterationRight(arr,TNR,pre){
+//     arr=arr.slice(arr.indexOf(TNR.val)+1)
+//     let preR=pre.splice(1,arr.length)
+//     TNR.right=preR.length===0?null:new TreeNode(preR[0])
+//     if(!TNR.right){
+//         return null
+//     }else{
+//         iteration(arr,TNR.right,preR,preR)
+//     }
+// }
 
 /**
- * @param {number[]} preorder
+ * 清晰版
+ * @param {number[]} preorder 
  * @param {number[]} inorder
- * @return {TreeNode}
- * 耗时264ms
+ * slice耗内存 
  */
 var buildTree = function(preorder, inorder) {
-    //传入空数组
-    if(preorder.length==0||inorder.length==0){
+    if(preorder.length===0||inorder.length===0){//空数组
         return null
     }
-    let TN=new TreeNode(preorder[0])//根节点
-    iteration(inorder,TN,preorder,preorder)//迭代
+    if(preorder.length===1){//叶子节点
+        return new TreeNode(preorder[0])
+    }
+    let TN=new TreeNode(preorder[0])
+    let index=inorder.indexOf(preorder[0])
+    TN.left=buildTree(preorder.slice(1,1+index),inorder.slice(0,index))
+    TN.right=buildTree(preorder.slice(1+index),inorder.slice(index+1))
     return TN
 }
-
-function iteration(arr,TN,preL,preR){
-    let flag1=iterationLeft(arr,TN,preL)
-    let flag2=iterationRight(arr,TN,preR)
-    if(!flag1&&!flag2){//叶子节点
-        return null
-    }
-}
-
-function iterationLeft(arr,TNL,pre){
-    arr=arr.slice(0,arr.indexOf(TNL.val))//获取左子树,不影响原arr
-    let preL=pre.splice(1,arr.length)//为下次寻找根节点,影响pre
-    TNL.left=preL.length===0?null:new TreeNode(preL[0])//影响原TNL(此次调用传入的TN),正因此才使TN成为二叉树
-    if(!TNL.left){
-        return null
-    }else{
-        iteration(arr,TNL.left,preL,preL)
-    }
-}
-function iterationRight(arr,TNR,pre){
-    arr=arr.slice(arr.indexOf(TNR.val)+1)
-    let preR=pre.splice(1,arr.length)
-    TNR.right=preR.length===0?null:new TreeNode(preR[0])
-    if(!TNR.right){
-        return null
-    }else{
-        iteration(arr,TNR.right,preR,preR)
-    }
-}
-
 
 var T=buildTree([3,9,20,15,7],[9,3,15,20,7])
 console.log(T)
