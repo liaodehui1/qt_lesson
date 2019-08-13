@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MVVM数据双向绑定</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" id="txt">
+        <p id="show-txt"></p>
+    </div>
+    <script>
+        //这个页面(静态)的数据(data)核心
+        //数据和界面的双向绑定
+        //函数封装的思想 大于十行的代码需分函数 每个函数只做一件事 复用
+        const obj={
+            // txt:'纳德拉'
+        }
+
+        var value
+        Object.defineProperty(obj,'txt',{
+            get:function(){
+                // console.log('获取属性')
+                return value
+            },
+            set:function(newValue){
+                // console.log('设置属性')
+                value=newValue
+                document.getElementById('show-txt').innerHTML=newValue
+                document.getElementById('txt').value=newValue
+            }
+        })
+        // setTimeout(function(){
+        //     obj.txt='甘地'
+        // },1000)
+        document.getElementById('txt').addEventListener('keyup',function(e){
+            obj.txt=e.target.value
+        })
+        // const txtFile=document.getElementById('show-txt')
+        // const oInput=document.getElementById('txt')
+        // //值和显示内容双向绑定
+        // const obj={
+        //     txt:'纳德拉'
+        // }
+        // function init(){
+        //     render(obj.txt)
+        //     setTimeout(function(){
+        //         obj.txt='甘地'
+        //         render(obj.txt)
+        //     },1000)
+        // }
+        // function render(txt){
+        //     oInput.value=txt
+        //     txtFile.innerText=txt
+        // }
+        // init()
+        
+        // // change事件触发需要焦点离开输入框
+        // document.getElementById('txt').addEventListener('input',function(){
+        //     txtFile.innerHTML=this.value
+        //     obj.txt=this.value
+        // })
+    </script>
+</body>
+</html>
