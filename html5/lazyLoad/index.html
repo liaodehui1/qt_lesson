@@ -32,7 +32,7 @@
         //节流函数
         //瞬间滑到底部只会加载出底部图片，中间图片不加载
         function throttle(fun,delay,time){
-            let timeout,startTime=new Date()
+            let timeout,startTime=new Date()//timeout,startTime内存不回收
             console.log('_delay')
             //非匿名函数 闭包
             return function(){
