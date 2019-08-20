@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+    <script src="http://www.yanhuangxueyuan.com/threejs/examples/js/controls/OrbitControls.js"></script>
+    <title>地球</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <!-- 录像机 -->
+    <canvas id="webglcanvas"></canvas>
+    <script>
+        var canvas,//3D容器
+            camera,//相机
+            scene,//场景 摆放场景，人物上场
+            group,
+            mesh,
+            renderer;//渲染器
+        var mouseX=0,mouseY=0
+        
+        function init(){
+            //场景
+            scene=new THREE.Scene()
+            scene.background=new THREE.Color(0xffffff)
+            group=new THREE.Group()
+            scene.add(group)
+
+            //图片加载进来 异步
+            let p=new Promise((resolve,reject)=>{
+                var loader=new THREE.TextureLoader()
+                loader.load('land_ocean_ice_cloud_2048.jpg',function(texture){
+                    //Shape 球体
+                    var geometry=new THREE.SphereGeometry(200,20,20)
+                    var material=new THREE.MeshBasicMaterial({
+                        map:texture
+                    })
+                    mesh=new THREE.Mesh(geometry,material)
+                    if(mesh){
+                        resolve('mesh')
+                    }
+                    //贴图
+                    group.add(mesh)
+                })
+            })
+
+            canvas=document.getElementById('webglcanvas')
+            // canvas.width=window.width
+            // 3d世界是Camera拍出来
+            camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,1,2000)
+            // 正前方
+            camera.position.z=500
+            camera.lookAt(scene.position)
+
+            //渲染器 openGL web端的实现
+            renderer=new THREE.WebGLRenderer({
+                canvas:canvas,
+                antialias:true
+            })
+            renderer.setSize(window.innerWidth,window.innerHeight)
+
+            return p
+        }
+
+        function render(){
+            renderer.render(scene,camera)
+            mesh.rotation.y+=0.01
+            requestAnimationFrame(render)
+        }
+        init().then(render)
+        var controls=new THREE.OrbitControls(camera)
+        // controls.addEventListener('keyup',render)
+    </script>
+</body>
+</html>
