@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EventEmitter原理</title>
+</head>
+
+<body>
+    <script>
+        /**
+ * _event:{
+ *  event1:fn
+ *  event2:[fn1,fn2]
+ * }
+ */
+        class EventEmitter {
+            constructor() {
+                this._event = {}
+            }
+            on(type, fn) {
+                if (typeof fn !== 'function') {
+                    return null
+                } else {
+                    const handle = this._event[type]
+                    if (!handle) {
+                        this._event[type] = fn
+                    } else {
+                        this._event[type] = [].concat(this._event[type], fn)
+                    }
+                }
+            }
+            emit(type, ...args) {
+                const handles = this._event[type]
+                if (!handles) {
+                    return false
+                } else {
+                    if (Array.isArray(handles)) {
+                        handles.forEach(handle => {
+                            handle.call(this,...args)
+                        })
+                    } else {
+                        handles.call(this,...args)
+                    }
+                }
+            }
+        }
+
+        var ev = new EventEmitter()
+        ev.on('event1', function () {
+            console.log('1')
+        })
+        ev.on('event2', function (a) {
+            console.log(2, a)
+        })
+        ev.on('event2', function (a, b) {
+            console.log(2, a, b)
+        })
+        ev.on('event3', function () {
+            console.log(this===ev)
+        })
+        ev.emit('event2', 3, 4)
+        ev.emit('event3')
+    </script>
+</body>
+
+</html>
