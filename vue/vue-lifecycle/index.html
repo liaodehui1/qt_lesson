@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>vue生命周期</title>
+</head>
+<body>
+    <div id="app">
+        <div class="msg">{{message}}</div>
+    </div>
+    <script>
+        var app=new Vue({
+            el:'#app',
+            data(){
+                return {
+                    message:'hello vue.js'
+                }
+            },
+            // 实例化之前
+            beforeCreate(){
+                console.log('beforeCreate')
+            },
+            //实例化之后
+            created(){
+                console.log('created')
+            },
+            // 渲染之前
+            beforeMount(){
+                console.log('beforeMount')
+            },
+            //渲染之后
+            mounted(){
+                console.log('mounted')
+            },
+            // 数据变化之前
+            beforeUpdate(){
+                console.log('beforeUpdate')
+            },
+            //数据变化之后
+            updated(){
+                console.log('updated')
+            },
+            // 实例销毁之前
+            beforeDestroy(){
+                console.log('beforeDestroy')
+            },
+            //实例销毁之后
+            destroyed(){
+                console.log('destroy')
+            },
+        })
+    </script>
+</body>
+</html>
