@@ -1,0 +1,34 @@
+*
+    padding 0
+    margin 0
+
+html,body
+    line-height 1
+    font-weight normal
+    font-family 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif
+
+ul
+    li
+        list-style none
+
+.clearfix
+    display inline-block
+    &::after
+        content ''
+        display block
+        height 0
+        line-height 0
+        clear both/*清除所有的脱离文档流*/
+        visibility hidden/*不可见但会占位*/
+
+@media (min-device-pixel-ratio:1.5),(-webkit-min-device-pixel-ratio:1.5)
+    .border-1px
+        &::after
+            -webkit-transform scaleY(0.7)
+            transform scaleY(0.7)
+
+@media (min-device-pixel-ratio:2),(-webkit-min-device-pixel-ratio:2)
+    .border-1px
+        &::after
+            -webkit-transform scaleY(0.5)
+            transform scaleY(0.5)
