@@ -31,6 +31,12 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.stylus$/, 
+      //   use:[
+      //     "stylus-loader"
+      //   ]
+      // },
       {
         test: /\.vue$/,
         loader: 'vue-loader',

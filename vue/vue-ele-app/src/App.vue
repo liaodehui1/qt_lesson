@@ -2,13 +2,25 @@
   <div id="app">
     <!-- 属性绑定 v-bind: -->
     <v-header :seller="seller"></v-header>
-    <router-view/>
+    <div class="tab border-1px">
+      <div class="tab-item">
+        <router-link to="/">商品</router-link>
+      </div>
+      <div class="tab-item">
+        <router-link to="/ratings">评论</router-link>
+      </div>
+      <div class="tab-item">
+        <router-link to="/seller">商家</router-link>
+      </div>
+    </div>
+    <router-view :seller="seller"/>
   </div>
 </template>
 
 <script>
 // 导入header组件
 import header from '@/components/header/Header'
+import goods from '@/components/goods/Goods'
 export default {
   name: 'App',
   data() {
@@ -17,15 +29,16 @@ export default {
     }
   },
   components:{
-    'v-header':header//为header重命名 防止冲突
+    'v-header':header,//为header重命名 防止冲突
+    'goods':goods
   },
   //实例创建后 请求在mounted之前便可
   //为了节约时间 提前一点
   created(){
     //promise
-    this.$http.get('https://www.easy-mock.com/mock/5d721c013e50bc7e8e405415/vue_ele_app/vue-ele-seller')
+    this.$http.get('http://127.0.0.1:8080/static/seller.json')
       .then(res=>{
-        console.log(res)
+        // console.log(res)
         if(res.data.errno===0){
           //对象合并
           this.seller=Object.assign({},this.seller,res.data.data)
@@ -36,6 +49,22 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="stylus">
+  @import './common/stylus/mixin.styl'
+  .tab
+    display flex
+    text-align center
+    height 40px
+    line-height 40px
+    border-bottom 1px solid rgba(7,17,27,0.1)
+    border-1px(rgba(7,17,27,0.1))
+    &-item
+      flex 1
+      &>a
+        color rgb(77,85,93)
+        font-size 14px
+        display block
+        text-decoration none
+        &.router-link-active
+          color rgb(240,20,20)
 </style>
