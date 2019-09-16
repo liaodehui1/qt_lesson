@@ -4,7 +4,7 @@
     <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
       <div class="tab-item">
-        <router-link to="/">商品</router-link>
+        <router-link to="/goods">商品</router-link>
       </div>
       <div class="tab-item">
         <router-link to="/ratings">评论</router-link>
@@ -38,7 +38,7 @@ export default {
     //promise
     this.$http.get('http://127.0.0.1:8080/static/seller.json')
       .then(res=>{
-        // console.log(res)
+        console.log('seller:',res)
         if(res.data.errno===0){
           //对象合并
           this.seller=Object.assign({},this.seller,res.data.data)
@@ -56,8 +56,6 @@ export default {
     text-align center
     height 40px
     line-height 40px
-    border-bottom 1px solid rgba(7,17,27,0.1)
-    border-1px(rgba(7,17,27,0.1))
     &-item
       flex 1
       &>a
@@ -67,4 +65,5 @@ export default {
         text-decoration none
         &.router-link-active
           color rgb(240,20,20)
+          border-1px(rgb(240,20,20))
 </style>

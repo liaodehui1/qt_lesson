@@ -26,6 +26,7 @@ export default {
       }else{
         this.$set(this.food,'count',1)
       }
+      // 子组件向父组件传值
       this.$emit('add',event.target)
     },
     decreaseCart(){

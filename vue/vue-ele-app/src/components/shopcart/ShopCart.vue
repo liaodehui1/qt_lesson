@@ -1,36 +1,70 @@
 <template>
-  <div class="shopcart">
-    <div class="content">
-      <div class="content-left">
-        <div class="logo-wrapper">
-          <div class="logo" :class="{'highlight':totalCount}">
-            <i class="icon-shopping_cart" :class="{'highlight':totalCount}"></i>
+  <div>
+    <div class="shopcart">
+      <div class="content">
+        <div class="content-left" @click="showList">
+          <div class="logo-wrapper">
+            <div class="logo" :class="{'highlight':totalCount}">
+              <i class="icon-shopping_cart" :class="{'highlight':totalCount}"></i>
+            </div>
+            <div class="num" v-show="totalCount">{{totalCount}}</div>
           </div>
-          <div class="num" v-show="totalCount">{{totalCount}}</div>
+          <div class="price" :class="{'highlight':totalCount}">￥{{totalPrice}}</div>
+          <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
         </div>
-        <div class="price" :class="{'highlight':totalCount}">￥{{totalPrice}}</div>
-        <div class="desc">另需配送费￥4元</div>
-      </div>
-      <div class="content-right">
-        <div class="pay" :class="payClass">
-          {{payDesc}}
-        </div>
-      </div>
-    </div>
-    <div class="ball-content">
-      <div v-for="(ball,index) in balls" :key="index">
-        <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
-          <div class="ball" v-show="ball.show">
-            <div class="inner inner-hook"></div>
+        <!-- click判断 处理函数需加() -->
+        <div class="content-right" @click="payDesc==='去结算' ? pay() : showList()">
+          <div class="pay" :class="payClass">
+            {{payDesc}}
           </div>
-        </transition>
+        </div>
       </div>
+      <div class="ball-container">
+        <div v-for="(ball,index) in balls" :key="index">
+          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+            <div class="ball" v-show="ball.show">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
+        </div>
+      </div>
+      <transition name="fade">
+        <div class="shopcart-list" v-show="isShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty"  @click.stop.prevent="empty">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li 
+              v-for="(item,index) in selectFoods"
+              :key="index"
+              class="food">
+              <span class="name">{{item.name}}</span>
+              <div class="price">
+                <span>￥{{item.count*item.price}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cart-control :food="item"></cart-control>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      </transition>
     </div>
+    <transition name="fade">
+      <div class="list-mask" v-show="isShow"></div>
+    </transition>
   </div>
 </template>
 
 <script>
+import CartControl from '@/components/cartcontrol/CartControl'
 export default {
+  components:{
+    'cart-control':CartControl,
+  },
   props:{
     selectFoods:{
       type:Array,
@@ -59,9 +93,10 @@ export default {
       },0)
     },
     totalCount(){
-      return this.selectFoods.reduce((pre,cur)=>{
+      let totalCount= this.selectFoods.reduce((pre,cur)=>{
         return pre+cur.count
       },0)
+      return totalCount
     },
     payDesc(){
       if(this.totalPrice===0){
@@ -74,6 +109,11 @@ export default {
       }
     },
     payClass(){
+      // 穿插监听总金额
+      // 为了使购物列表为空时能自动隐藏
+      if(this.totalPrice<=0){
+        this.showList()
+      }
       if(this.totalPrice<this.minPrice){
         return 'not-enough'
       }else{
@@ -102,18 +142,72 @@ export default {
         {
           show:false
         }
-      ]
+      ],
+      dropBalls: [],
+      isShow:false
     }
   },
   methods: {
-    beforeDrop(){
-
+    drop(el){
+      let ball=this.balls.find(ball=>!ball.show)
+      ball.el=el
+      ball.show=true
+      this.dropBalls.push(ball)
     },
-    dropping(){
-      
+    beforeDrop(el){
+      // let count = this.balls.length;
+      //   while (count--) {
+      //     let ball = this.balls[count];
+      let index=this.balls.findIndex(ball=>!ball.show)
+      let ball=this.balls[index - 1]
+      if (ball.show) {
+        // getBoundingClientRect获取相对视口位置和自身宽高
+        let rect = ball.el.getBoundingClientRect();
+        let x = rect.left - 32;
+        let y = -(window.innerHeight - rect.top - 22);
+        el.style.display = '';
+        // 抛物线 水平匀速linear 垂直方向贝塞尔曲线
+        // el 曲线运动会改变inner运动轨迹
+        el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+        el.style.transform = `translate3d(0,${y}px,0)`;
+        let inner = el.getElementsByClassName('inner-hook')[0];
+        inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+        inner.style.transform = `translate3d(${x}px,0,0)`;
+      }
+        // }
     },
-    afterDrop(){
-
+    dropping(el){
+      // 重绘
+      let rf = el.offsetHeight;
+      // 重绘后执行
+      this.$nextTick(()=>{
+        el.style.webkitTransform = 'translate3d(0,0,0)'
+        el.style.transform = 'translate3d(0,0,0)'
+        let inner = el.getElementsByClassName('inner-hook')[0]
+        inner.style.webkitTransform = 'translate3d(0,0,0)'
+        inner.style.transform = 'translate3d(0,0,0)'
+      })
+    },
+    afterDrop(el){
+      let ball = this.dropBalls.shift();
+      if (ball) {
+        ball.show = false;
+        ball.el=null
+        el.style.display = 'none';
+      }
+    },
+    showList(){
+      if(this.totalPrice>0){
+        this.isShow=!this.isShow
+      }else{
+        this.isShow=false
+      }
+    },
+    pay(){
+      console.log('去结算')
+    },
+    empty(event){
+       this.$emit('empty')
     }
   },
 }
@@ -214,7 +308,7 @@ export default {
         left: 32px
         bottom: 22px
         z-index: 200
-        transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
         .inner
           width: 16px
           height: 16px

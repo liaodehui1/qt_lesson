@@ -52,7 +52,9 @@
       <shop-cart 
         :selectFoods="selectFoods" 
         :deliveryPrice="seller.deliveryPrice" 
-        :minPrice="seller.minPrice">
+        :minPrice="seller.minPrice"
+        @empty="empty"
+        ref="shopCart">
       </shop-cart>
     </div>
   </div>
@@ -74,7 +76,8 @@ export default {
       classMap: [],
       currentIndex:0,
       listHeght:[],
-      scrollY:0
+      scrollY:0,
+      target:{}
     }
   },
   components:{
@@ -108,6 +111,7 @@ export default {
             }
           })
         })
+        // console.log(foods)
         return foods
       },
       // test(){
@@ -116,9 +120,9 @@ export default {
     },
   methods:{
     initScroll(){
-      this.menuScroll = new BScroll(this.$refs.menuWrapper,{
-        click:true
-      });
+      // this.menuScroll = new BScroll(this.$refs.menuWrapper,{
+      //   click:true
+      // });
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
         click:true
       });
@@ -147,13 +151,24 @@ export default {
       for(let i = 0;i < foodList.length;i++){
         let item = foodList[i];
         // console.log(item.clientHeight)
+        // 获取容器高度
         height+=item.clientHeight
         this.listHeght.push(height)
       }
       // console.log(this.listHeght)
     },
-    addFood(){
-
+    addFood(target){
+      //  this.$refs.shopCart获取组件实例
+      this.$refs.shopCart.drop(target)
+    },
+    empty(){
+       this.goods.forEach(good=>{
+          good.foods.forEach(food=>{
+            if(food.count){
+              food.count=0
+            }
+          })
+        })
     }
   }
 }
