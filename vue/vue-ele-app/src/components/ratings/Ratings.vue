@@ -1,6 +1,6 @@
 <template>
   <div class="ratings">
-    <div class="ratings-content">
+    <div class="ratings-content" >
       <div class="overview">
         <div class="overview-left">
           <h1 class="score">{{seller.score}}</h1>
@@ -25,13 +25,19 @@
         </div>
       </div>
       <split></split>
-      <reatingsSelect :ratings="ratings"></reatingsSelect>
+      <reatingsSelect 
+        :ratings="ratings" 
+        :showType="showType" 
+        :show="show" 
+        :only_content="onlyContent"
+        :showAllRatings='showAllRatings'></reatingsSelect>
       <div class="rating-wrapper">
         <ul>
           <li 
             class="rating-item" 
             v-for="(rating,index) in ratings"
-            :key="index">
+            :key="index"
+            v-show="(!rating.rateType ^ showType) && (!onlyContent || rating.text)">
             <div class="avatar">
               <img width="28" height="28" :src="rating.avatar">
             </div>
@@ -50,7 +56,7 @@
                   :key="index">{{item}}</span>
                 </div>
             </div>
-            <div class="time">{{rating.rateTime}}</div>
+            <div class="time">{{rateTime[index]}}</div>
           </li>
         </ul>
       </div>
@@ -62,6 +68,8 @@
 import star from '@/components/star/Star'
 import split from '@/components/split/Split'
 import reatingsSelect from '@/components/ratingsSelect/RatingsSelect'
+import {formDate} from '@/common/js/formDate.js'
+import BScroll from 'better-scroll';
 export default {
   components:{
     star,
@@ -75,7 +83,10 @@ export default {
   },
   data(){
     return {
-      ratings:[]
+      ratings:[],
+      rateTime:[],
+      showType:-1,
+      onlyContent:true
     }
   },
   created() {
@@ -84,13 +95,35 @@ export default {
         console.log('ratings:',res)
         if(res.data.errno===0){
           this.ratings=res.data.data
+          this.ratings.forEach(rating => {
+            let date=formDate(rating.rateTime)
+            this.rateTime.push(date)
+          });
+          this.$nextTick(() => {
+            console.log(this.$el);
+            this.scroll = new BScroll(this.$el, {click: true});
+          });
         }
       })
+  },
+  methods: {
+    show(type){
+      this.showType=type
+    },
+    showAllRatings(){
+      this.onlyContent=!this.onlyContent
+    }
   },
 }
 </script>
 
 <style lang="stylus" scoped>
+.ratings
+  position absolute
+  top 170px
+  bottom 0px
+  overflow hidden
+  width 100% //必须 绝对定位脱离文档流 width等于内容最大宽度
   .ratings-content
     .overview
       padding 16px 0

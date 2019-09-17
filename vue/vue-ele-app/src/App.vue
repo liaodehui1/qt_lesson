@@ -51,19 +51,22 @@ export default {
 
 <style lang="stylus">
   @import './common/stylus/mixin.styl'
-  .tab
-    display flex
-    text-align center
-    height 40px
-    line-height 40px
-    &-item
-      flex 1
-      &>a
-        color rgb(77,85,93)
-        font-size 14px
-        display block
-        text-decoration none
-        &.router-link-active
-          color rgb(240,20,20)
-          border-1px(rgb(240,20,20))
+  #app
+    height 100vh
+    overflow hidden
+    .tab
+      display flex
+      text-align center
+      height 40px
+      line-height 40px
+      &-item
+        flex 1
+        &>a
+          color rgb(77,85,93)
+          font-size 14px
+          display block
+          text-decoration none
+          &.router-link-active
+            color rgb(240,20,20)
+            border-1px(rgb(240,20,20))
 </style>

@@ -208,6 +208,7 @@ export default {
         vertical-align top
         margin 0 4px
         font-size 10px
+        letter-spacing 1px //设置字间距
       .icon-keyboard_arrow_right
         position absolute
         font-size 10px

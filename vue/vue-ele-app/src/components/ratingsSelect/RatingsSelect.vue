@@ -1,20 +1,20 @@
 <template>
   <div class="ratings-select">
     <div class="rating-type">
-      <span class="block positive">
+      <span class="block positive" :class="{'active':showType===-1}" @click="show(-1)">
         全部
         <span class="count">{{totalCount}}</span>
       </span>
-      <span class="block positive">
+      <span class="block positive" :class="{'active':showType===0}"  @click="show(0)">
         满意
         <span class="count">{{positiveCount}}</span>
       </span>
-      <span class="block negative">
+      <span class="block negative" :class="{'active':showType===1}" @click="show(1)">
         不满意
         <span class="count">{{negativeCount}}</span>
       </span>
     </div>
-    <div class="switch">
+    <div class="switch" :class="{'on':only_content}" @click="showAllRatings">
       <span class="icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  props:['ratings'],
+  props:['ratings','showType','show','only_content','showAllRatings'],
   computed: {
     totalCount(){
       return this.ratings.length
@@ -61,12 +61,12 @@ export default {
         line-height 16px
       .positive
         background-color rgba(0,160,220,.2)
-        &.on
+        &.active
           background-color #00a0dc
           color #ffffff
       .negative
         background-color #ccc
-        .on
+        &.active
           background-color #666
           color #ffffff
     .switch
