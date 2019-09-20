@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>图片瀑布流</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    img {
+      /* float: left; */
+      vertical-align: top;
+      width: 200px;
+      padding-left: 10px;
+      padding-bottom: 10px;
+      border-radius: 2px;
+    }
+    .pic_footer{
+      height: 1px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="waterfall">
+    <img src="./images/1.png" alt="">
+    <img src="./images/2.png" alt="">
+    <img src="./images/3.png" alt="">
+    <img src="./images/4.png" alt="">
+    <img src="./images/5.png" alt="">
+    <img src="./images/6.png" alt="">
+    <img src="./images/7.png" alt="">
+    <img src="./images/8.png" alt="">
+    <img src="./images/9.png" alt="">
+    <img src="./images/10.png" alt="">
+    <img src="./images/11.png" alt="">
+    <img src="./images/12.png" alt="">
+    <img src="./images/13.png" alt="">
+    <img src="./images/14.png" alt="">
+    <img src="./images/15.png" alt="">
+    <img src="./images/16.png" alt="">
+    <img src="./images/17.png" alt="">
+    <img src="./images/18.png" alt="">
+    <img src="./images/19.png" alt="">
+    <img src="./images/20.png" alt="">
+  </div>
+  <div class="pic_footer"></div>
+  <script src="./index.js"></script>
+  <script>
+    // 图片资源加载完成
+    let wt
+    window.onload = function () {
+      const $waterfall = document.getElementById('waterfall')
+      wt = new Waterfall({
+        number: 20,
+        container: $waterfall
+      })
+      // setTimeout(()=>{
+      //   const fragment = document.createDocumentFragment()
+      //   for(let i=0;i<20;i++){
+      //     const img = document.createElement('img')
+      //     img.setAttribute('src',`./images/${i+1}.png`)
+      //     fragment.appendChild(img)
+      //   }
+      //   wt.append(fragment)
+      // },3000)
+
+    }
+    var loadObserver = new IntersectionObserver((entries) => {
+      console.log(entries)
+      if (entries[0].intersectionRatio <= 0) {
+        return
+      } else {
+        const fragment = document.createDocumentFragment()
+        for (let i = 0; i < 10; i++) {
+          const img = document.createElement('img')
+          img.setAttribute('src', `./images/${i + 1}.png`)
+          fragment.appendChild(img)
+        }
+        console.log(fragment)
+        wt.append(fragment)
+      }
+    }, { threshold: [0.8] })
+    loadObserver.observe(document.querySelector('.pic_footer'),)    
+  </script>
+</body>
+
+</html>
