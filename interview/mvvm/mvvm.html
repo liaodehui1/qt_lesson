@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>MVVM</title>
+</head>
+<body>
+  <!-- Model模型 V视图 VM数据模型 -->
+  <!-- View -->
+  <span id="container">1</span>
+  <button id="button">点击加1</button>
+  <script>
+    // MVVM是前端的设计模式 
+    let obj = {} // Model
+    // 会通过ajax 从服务器端拿到
+    // 数据可变 get set value
+    // vue data(){}
+
+    // document.getElementById('button')
+    //   .addEventListener('click',function(){
+    //     obj.value++
+    //     document.getElementById('container').textContent=obj.value
+    //   })
+
+    var value=1
+    // vue早期使用的数据绑定响应式编程的实现
+    // 
+    Object.defineProperty(obj,'value',{
+      get:function(){
+        return value
+      },
+      set:function(newValue){
+        value = newValue
+        document.getElementById('container').textContent=newValue
+      }
+    })
+
+    document.getElementById('button')
+      .addEventListener('click',function(){
+        obj.value++
+      })
+  </script>
+</body>
+</html>

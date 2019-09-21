@@ -1,3 +1,6 @@
+# MVVM
++ mvvm分层 理解更深入
++ JS 传统开发 写点事件，DOM，AJAX
 ## defineProperty
 Object.defineProperty(obj,prop,desc)
 + obj 需要定义属性的对象
