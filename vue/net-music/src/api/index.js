@@ -6,7 +6,7 @@ const vue = new Vue();
 
 // axios的配置
 axios.defaults.timeout = 10000;
-axios.defaults.baseUrl = 'http://localhost:3000';
+axios.defaults.baseURL = 'http://localhost:3000';
 
 // 返回状态判断(也叫响应拦截器)
 axios.interceptors.response.use((res)=>{
@@ -51,7 +51,7 @@ export default {
     return fetchGet('/playList/detail',params);
   },
   // 歌曲搜索
-  MusicSearch() {
+  MusicSearch(params) {
     return fetchGet('/search',params);
   },
   // 热搜

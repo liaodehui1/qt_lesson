@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <v-play></v-play>
     <v-header>
       <i class="icon" slot="left-icon">&#xe692;</i>
       <span slot="content">我的音乐</span>
@@ -9,7 +10,7 @@
     </v-header>
     <v-sidebar></v-sidebar>
     <!-- tab -->
-    <v-tab/>
+    <v-tab></v-tab>
     <router-view/>
   </div>
 </template>
@@ -18,12 +19,14 @@
 import Header from '@/components/Header'
 import bar from '@/components/Sidebar'
 import tab from '@/components/tab'
+import play from '@/components/play'
 export default {
   name: 'App',
   components:{
     'v-header':Header,
     'v-sidebar':bar,
-    'v-tab':tab
+    'v-tab':tab,
+    'v-play':play
   }
 }
 </script>
@@ -50,5 +53,4 @@ html,body
   -webkit-tap-highlight-color transparent
   background rgba(8, 5, 58, 0.9)
   color #fff
-
 </style>
