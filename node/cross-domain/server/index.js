@@ -20,6 +20,14 @@ app.use(async (ctx,next)=>{
 
 // router配置
 var router = new KoaRouter();
+
+router.get('/api/post', async function (ctx) {
+  ctx.body = [
+    { title: 'node.js 入门到精通', createTime: '2018-12-12' },
+    { title: 'php 入门到精通', createTime: '2018-11-11' },
+  ]
+});
+
 router.post('/api/books', (ctx, next) => {
   // ctx.router available
   console.log(ctx.cookies.get('hello'))
