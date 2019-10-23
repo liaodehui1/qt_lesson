@@ -1,0 +1,8 @@
+<%- include('header') %>
+  <h1>hello views</h1>
+  <p><%= userName %></p>
+  <p><%= sex %></p>
+  <% hobbies.forEach(hobby => { %>
+    <li><%= hobby %></li>
+  <% }) %>
+<%- include('footer') %>
