@@ -12,7 +12,7 @@ export default {
       // 路由跳转
       this.$router.push('/StarBanner')
     }
-  },
+  }
 }
 </script>
 

@@ -1,9 +1,13 @@
 <template>
   <div class="star-login">
-    <h1>登录</h1>
+    <h1>注册</h1>
     <div class="login-wraper">
       <div class="avatar" :style="`background-image:url(${avatar});`"></div>
       <div class="input-group">
+        <label for="nickname">昵称</label>
+        <input type="text" name="nickname" v-model="nickname">
+      </div>
+      <div class="input-group input-group-panel">
         <label for="username">账号</label>
         <input type="text" name="username" v-model="username">
       </div>
@@ -11,10 +15,10 @@
         <label for="userpwd">密码</label>
         <input type="password" name="userpwd" v-model="userpwd">
       </div>
-      <p class="forgot-pwd">忘记密码</p>
-      <div class="sign" @click="login">登录</div>
+      <div class="sign" @click="register">注册</div>
+      <span class="badge-img">+</span>
     </div>
-    <p class="register" @click="register">新用户？点击这里注册</p>
+    <p class="register" @click="login">已有账号了？点击登录</p>
   </div>
 </template>
 
@@ -23,37 +27,42 @@ export default {
   name:'StarLogin',
   data() {
     return {
+      nickname:'',
       username:'',
       userpwd:'',
-      avatar:require("../../assets/img/raw_1512446140.jpeg"),
+      avatar:require("../../assets/img/raw_1512446162.png"),
     }
   },
   methods: {
-    register(){
-      this.$router.push({path:'/StarRegister'})
-    },
     login(){
-      if(this.username.trim() == '' || this.userpwd.trim() == ''){
+      this.$router.push({path:'/StarLogin'})
+    },
+    register(){
+      if(this.nickname.trim() == '' || this.username.trim() == '' || this.userpwd.trim() == ''){
         this.$toast({
-          message:'账号或密码不能为空',
+          message:'昵称账号或密码不能为空',
           duration:1000
         })
         return
       }
       this.$http({
-        url:'http://127.0.0.1:3000/users/userLogin',
+        url:'http://127.0.0.1:3000/users/userRegister',
         method:'post',
         data:{
+          nickname:this.nickname.trim(),
           username:this.username.trim(),
           userpwd:this.userpwd.trim()
         }
       }).then(res => {
         console.log(res)
         if(res.data.code == '80000'){
-          sessionStorage.setItem('userinfo',JSON.stringify(res.data.data))
-          this.$router.push({path:'/noteClass'})
+         
+          this.$router.push({path:'/StarLogin'})
         }else{
-          this.$toast(res.data.data.mess)
+          this.$toast({
+             message:res.data.mess,
+             duration:1000
+          })
         }
       }).catch(err => {
         console.log(err)
@@ -141,7 +150,7 @@ input {
         font-family: Arial;
     }
     .sign{
-        margin: 0 auto;
+        margin: 0.3rem auto;
         width: 5.546667rem;
         height: 1.226667rem;
         line-height: 1.226667rem;
