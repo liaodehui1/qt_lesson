@@ -31,11 +31,7 @@ router.post('/userRegister',async(ctx,next) => {
     }
     return
   }
-  // let user = {
-  //   username:_username,
-  //   userpwd:_userpwd,
-  //   nickname:_nickname
-  // }
+  
   await userService.findUser(_username).then(async (res) => {
     if(res.length){
       try{
