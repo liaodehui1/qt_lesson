@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 变量 声明提升
+    console.log(a) // undefined
+    var a = 123 
+    // var a; //提升
+    // a = 123 // 不提升
+
+    // 函数声明体提升
+    test()
+    function test(){
+      console.log('123') //123
+    }
+
+    function fn(a){
+      console.log(a) // function(){}
+      var a = 123
+      console.log(a) // 123
+      function a(){}
+      console.log(a) // 123
+      var b = function(){}
+      console.log(b) // function(){}
+      function d(){}
+    }
+    fn(1)
+    // 预编译
+    // 1. 创建AO对象
+    // AO = {}
+    // 2. 找出形参和变量声明作为属性，并赋值为undefined
+    // AO = {
+    //   a:undefined,
+    //   b:undefined
+    // }
+    // 3. 形参和实参统一
+    // AO = {
+    //   a: 1,
+    //   b: undefined
+    // }
+    // 4. 找出函数声明作为属性，并赋值为函数体
+    // AO = {
+    //   a: function a(){},
+    //   b: undefined,
+    //   d: function(){}
+    // }
+
+    // 执行
+    // 1. console.log(a) // function(){}
+    // 2. var a = 123 // 赋值a
+    // AO = {
+    //   a: 123,
+    //   b:undefined,
+    //   d: function(){}
+    // }
+    // 3. console.log(a) // 123
+    // 4. function a(){} // 非执行操作跳过
+    // 5. console.log(a) // 123
+    // 6. var b = function(){} // 赋值b
+    // AO = {
+    //   a: 123,
+    //   b: function(){},
+    //   d: function(){}
+    // }
+    // 7. console.log(b) // function(){}
+    // 8. function d(){} // 非执行操作跳过
+  </script>
+</body>
+</html>
