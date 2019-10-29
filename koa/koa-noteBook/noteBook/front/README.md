@@ -26,3 +26,7 @@
 + 使用require
 + 背景绑定
 `:style="`background-image:url(${item.img})`"`
+
+## 富文本
++ 含有元素标签的文本
++ 使用v-html进行内容插入
