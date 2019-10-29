@@ -5,6 +5,10 @@ import StarBanner from '@/components/starBanner/StarBanner'
 import StarLogin from '@/components/login/StarLogin'
 import StarRegister from '@/components/register/StarRegister'
 import NoteClass from '@/components/noteClass/NoteClass'
+import NoteList from '@/components/noteList/NoteList'
+import NoteDetail from '@/components/noteDetail/NoteDetail'
+import person from '@/components/person/person'
+import publishNote from '@/components/publishNote/publishNote'
 Vue.use(Router)
 
 export default new Router({
@@ -50,5 +54,37 @@ export default new Router({
         title:'笔记分类'
       }
     },
+    {
+      path:'/NoteList',
+      name:'NoteList',
+      component:NoteList,
+      meta:{
+        title:'笔记列表'
+      }
+    },
+    {
+      path:'/NoteDetail',
+      name:'NoteDetail',
+      component:NoteDetail,
+      meta:{
+        title:'笔记详情'
+      }
+    },
+    {
+      path:'/person',
+      name:'person',
+      component:person,
+      meta:{
+        title:'个人详情'
+      }
+    },
+    {
+      path:'/publishNote',
+      name:'publishNote',
+      component:publishNote,
+      meta:{
+        title:'写笔记'
+      }
+    }
   ]
 })
