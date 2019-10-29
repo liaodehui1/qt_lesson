@@ -102,6 +102,83 @@ router.post('/userLogin',async(ctx,next) => {
       }
     })
 })
-
-
+// 根据分类名称查找对应的笔记列表
+router.post('/findNoteListByType', async (ctx, next) => {
+  let note_type = ctx.request.body.note_type
+  await userService.findNoteListByType(note_type)
+    .then(async (res) => {
+      let r = ''
+      if (res.length) {
+        r = 'OK'
+        ctx.body = {
+          code: 800000,
+          data: res,
+          mess: '查找成功'
+        }
+      } else {
+        r = 'error',
+        ctx.body = {
+          code: 800004,
+          data: r,
+          mess: '查找失败'
+        }
+      }
+    }).catch( err => {
+      ctx.body = {
+        code: 800002,
+        data: err
+      } 
+    })
+})
+// 根据笔记列表的id查找笔记的详情
+router.post('/findNoteDetailById',async(ctx,next) => {
+  let id = ctx.request.body.id
+  await userService.findNoteDetailById(id)
+    .then(async (res) => {
+      let r = ''
+      if(res.length){
+        r = 'ok'
+        ctx.body = {
+          code:'800000',
+          data:res[0],
+          mess:'查找成功'
+        }
+      }else{
+        r = '查询失败'
+        ctx.body = {
+          code:'800004',
+          data:r
+        }
+      }
+    }).catch((err) => {
+      ctx.body = {
+        code:'800002',
+        data:err
+      }
+    })
+})
+// 发布笔记
+router.post('/insertNote',async(ctx,next) => {
+  // console.log(ctx.request.body)
+  let note = ctx.request.body
+  await userService.insertNote(note)
+    .then(res => {
+      let r = ''
+      if(res.affectedRows != 0){
+        r = 'ok'
+        ctx.body = {
+          code:'800000',
+          data: r,
+          mess:'发布成功'
+        }
+      }else{
+        r = 'error'
+        ctx.body = {
+          code:'800004',
+          data: r,
+          mess:'发布失败'
+        }
+      }
+    })
+})
 module.exports = router
