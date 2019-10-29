@@ -3,20 +3,20 @@
     <div class="note-class">
       <header>
         <div @click="menu">
-          <van-icon name="wap-nav" size="20px" />
+          <van-icon name="wap-nav" size="20px"></van-icon>
         </div>
         <div>
-          <van-icon name="like" size="20px" />
-          <van-icon name="search" size="20px" />
+          <van-icon name="like" size="20px"></van-icon>
+          <van-icon name="search" size="20px"></van-icon>
         </div>
       </header>
       <section>
         <div
           class="note-item"
-          v-for="(item,index) in noteClassList"
+          v-for="(item, index) in noteClassList"
           :key="index"
           :style="`background-image:url(${item.img})`"
-          @click="noteList(item.title)"
+          @click="nodeList(item.title)"
         >
           <div class="mask"></div>
           <span class="title">{{item.title}}</span>
@@ -97,21 +97,19 @@ export default {
     };
   },
   methods: {
-    menu(){
-      this.isClickMenu_note = true
-      this.isClickMenu_info = true
+    menu() {
+      this.isClickMenu_note = true;
+      this.isClickMenu_info = true;
     },
-    arrow(){
-      this.isClickMenu_note = false
-      this.isClickMenu_info = false
+    arrow() {
+      this.isClickMenu_note = false;
+      this.isClickMenu_info = false;
     },
-    noteList(title){
-      this.$router.push({
-        path:'/noteList',
-        query:{
-          'title':title
-        }
-      })
+    nodeList(title) {
+      // console.log('123');
+      
+      this.$router.push({path: '/noteList', query:{'title':title}})
+      // this.$router.push({path:'/noteClass'});
     }
   },
 };
