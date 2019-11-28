@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import BaseComponent from '../../lib/BaseComponent'
 import {HomeWrapper,HomeLeft} from './style'
-import {actionCreators} from './store/index'
+import { actionCreators } from './store/index'
 import Topic from "./components/Topic";
+import List from "./components/List";
 
 class Home extends BaseComponent {
   componentDidMount() {
@@ -17,6 +18,7 @@ class Home extends BaseComponent {
             alt=''
               src="//upload.jianshu.io/admin_banners/web_images/4318/60781ff21df1d1b03f5f8459e4a1983c009175a5.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/1250/h/540" />
           <Topic></Topic>
+          <List></List>
         </HomeLeft>
       </HomeWrapper>
     );

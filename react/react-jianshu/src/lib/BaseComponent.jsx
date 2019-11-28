@@ -10,11 +10,11 @@ class BaseComponent extends Component {
     }
     for(const key in nextProps) {
       if(!is(thisProps[key],nextProps[key])) {
-        console.log(`更新${key}`,thisProps[key],nextProps[key])
+        // console.log(`更新${key}`,thisProps[key],nextProps[key])
         return true
       }
     }
-    console.log('不更新')
+    // console.log('不更新')
     return false
   }
 }

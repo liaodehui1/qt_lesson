@@ -27,7 +27,6 @@ class Topic extends BaseComponent {
 } 
 
 const mapStateToProps = (state) => {
-  console.log(11111, state)
   return {
     list: state.getIn(['home','topicList'])
   }
