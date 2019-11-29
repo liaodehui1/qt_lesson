@@ -1,15 +1,15 @@
-import * as CONSTANTS from './constant'
 import {fromJS} from 'immutable'
+import * as CONSTANTS from './constants'
 
 const defaultState = fromJS({
-  focus:false
+  login: false
 })
 
 export default (state = defaultState, action) => {
   switch(action.type) {
-    case CONSTANTS.SEARCH_FOCUS:
-      return state.set('focus',action.focus)
+    case CONSTANTS.CHANGE_LOGIN_STATUS:
+      return state.set('login',action.status)
     default:
-      return defaultState
+      return state
   }
 }

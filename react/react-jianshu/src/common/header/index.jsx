@@ -34,7 +34,13 @@ class Header extends Component {
               timeout={200}
               in={focus}
               classNames="slide">
-              <NavSearch onFocus={this.props.handFocus}></NavSearch>
+              <NavSearch 
+                onFocus={() => {
+                  this.props.handFocus(true)
+                }}
+                onBlur={() => {
+                  this.props.handFocus(false)
+                }}></NavSearch>
             </CSSTransition>
           </SearchWrapper>
         </Nav>
@@ -59,8 +65,8 @@ const mapStateToProps = (state) => {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    handFocus() {
-      dispatch(actionCreators.seachFocus())
+    handFocus(focus) {
+      dispatch(actionCreators.seachFocus(focus))
     }
   }
 }
