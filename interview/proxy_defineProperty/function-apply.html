@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let num = 1
+    function asyncQue(cb) {
+      setTimeout(() => {
+        cb()
+      },1000)
+    }  
+    const cb = () => {
+      console.log(num++)
+    }
+    
+    let promise //全局
+    let asyncQueProxy = new Proxy(asyncQue,{
+      apply(target,ctx,args) {
+        // console.log(args)
+        // .then 返回一个promise
+        // 上一个promise resolve时，下一个才能执行.then
+        // Promise.resolve 接收一个promise则返回该promise
+        promise = Promise.resolve(promise).then(() => {
+          console.log(target)
+          return new Promise((resolve,reject) => {
+            // 恢复他的默认行为
+            Reflect.apply(target,ctx,[() => {
+              args[0]()
+              resolve()
+            }])
+          })
+        })
+        console.log(promise)
+      }
+    })
+
+    asyncQueProxy(cb)
+    asyncQueProxy(cb)
+    asyncQueProxy(cb)
+  </script>
+</body>
+</html>
