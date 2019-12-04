@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    this.a = 20
+    function go() {
+      // new go() this -> 实例
+      // new: {} -> 继承go.prototype -> 执行构造函数 -> 返回{}
+      console.log(this.a) // prototype
+      this.a = 30 // 实例上
+      // {
+      //   a: 30,
+      //   __proto__: {
+      //     a: 40
+      //   }
+      // }
+    }  
+    go.prototype.a = 40
+    console.log(new go().a)
+
+    var test = {
+      a: 50,
+      init: function(fn) {
+        fn() //window
+        console.log(this.a)
+        return fn
+      }
+    }
+    test.init(go)
+    console.log(this.a) // window.a = 30
+  </script>
+</body>
+</html>
