@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 class Header extends Component {
+  buy() {
+    console.log('buy')
+  }
   render() {
     return (
       <div>
