@@ -1,9 +1,23 @@
 import React from 'react'
-import {renderToString} from 'react-dom/server'
+import { StaticRouter } from 'react-router-dom'
+import { renderRoutes } from "react-router-config";
+import { renderToString } from 'react-dom/server'
 import Header from '../components/Header'
+import routes from "../router";
 
-
-export default () => {
+export default (req) => {
+  const App = () => {
+    return (
+      <>
+        <StaticRouter location={req.path}>
+          {/* <Header></Header> */}
+          <div>
+            {renderRoutes(routes)}
+          </div>
+        </StaticRouter>
+      </>
+    )
+  }
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -13,7 +27,8 @@ export default () => {
     <title>Document</title>
   </head>
   <body>
-    <div id="app">${renderToString(<Header></Header>)}</div>
+    <div id="app">${renderToString(<App />)}</div>
+    <script src='/index.js'></script>
   </body>
   </html>`
 }
