@@ -6,7 +6,6 @@ export default function (props) {
   // React.createRef()
   const scrollContainerRef = useRef()
   useEffect(() => {
-    console.log(scrollContainerRef)
     const scroll = new BScroll(
       scrollContainerRef.current
     )
