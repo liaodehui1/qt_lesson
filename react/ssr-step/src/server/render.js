@@ -1,31 +1,24 @@
 import React from 'react';
-import {
-  renderToString
-} from 'react-dom/server';
-import {
-  StaticRouter
-} from 'react-router-dom';
-import { Provider } from 'react-redux'
-// BrowserRouter h5 history api
-// 内存 router ['/', '/a', '/a/c']
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
-import Header from '../components/Header';
+import { Provider } from 'react-redux';
+import StyleContext from 'isomorphic-style-loader/StyleContext';
 import routes from '../routers';
-import {
-  getServerStore
-} from '../store/index'
 // 每个用户的请求 创建一个 新的 store
 export default (req,store) => {
-  // jsx
+  const css = new Set() // CSS for all rendered React components
+  const insertCss = (...styles) => styles.forEach(style => css.add(style._getCss()))
   const App = (
-    <Provider store={store}>
-      <StaticRouter location={req.path}>
-        {/* <Header /> */}
-        <div>
-          {renderRoutes(routes)}
-        </div>
-      </StaticRouter>
-    </Provider>
+    <StyleContext.Provider value={{ insertCss }}>
+      <Provider store={store}>
+        <StaticRouter location={req.path}>
+          <div>
+            {renderRoutes(routes)}
+          </div>
+        </StaticRouter>
+      </Provider>
+    </StyleContext.Provider>
   )
   return `
   <!DOCTYPE html>
@@ -34,6 +27,7 @@ export default (req,store) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>${[...css].join('')}</style>
   <title>Document</title>
 </head>
 <body>

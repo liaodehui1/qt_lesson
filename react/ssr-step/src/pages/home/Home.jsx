@@ -5,6 +5,9 @@ import {
 import { 
   getCommentList
  } from '../../store/action/homeAction';
+import style from './Home.css';
+import withStyles from 'isomorphic-style-loader/withStyles';
+
 class Home extends Component {
   // 组件已经挂载
   // 服务端没有全部生命周期
@@ -15,7 +18,7 @@ class Home extends Component {
     const { commentList } = this.props;
     return ( 
       <div>
-        home
+        <h3 className={style.title}>Home</h3>
         {
           commentList.map((comment, i) => {
             return (
@@ -53,4 +56,4 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps,
-  mapDispatchToProps)(Home);
+  mapDispatchToProps)(withStyles(style)(Home));

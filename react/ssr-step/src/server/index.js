@@ -1,12 +1,9 @@
 import React from 'react';
 import express from 'express';
-import { renderToString 
-} from 'react-dom/server';
-import {matchRoutes} from 'react-router-config'
-import Header from '../components/Header';
+import {matchRoutes} from 'react-router-config';
 import render from './render';
-import routes from '../routers'
-import {getServerStore} from '../store/index'
+import routes from '../routers';
+import {getServerStore} from '../store/index';
 
 /**
  * 构建在 虚拟 dom 之上的 服务端渲染
