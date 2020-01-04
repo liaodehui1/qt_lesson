@@ -1,0 +1,19 @@
+{
+  "name": "babel-plugin",
+  "version": "1.0.0",
+  "description": "源代码 -> 解析 -> AST -> 增删改查 -> AST -> 另一份源代码",
+  "main": "index.js",
+  "scripts": {
+    "compile": "babel src --out-dir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}
