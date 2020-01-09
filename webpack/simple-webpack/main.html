@@ -1,0 +1,28 @@
+<script>
+  (function(modules) {
+    function require(id) {
+      function localRequire(relativePath) {
+        return require(modules[id].dependencies[relativePath])
+      }
+      var exports = {};
+      (function(require, code, exports) {
+        eval(code)
+      })(localRequire, modules[id].code, exports)
+      return exports
+    }
+    // module.exports = {}
+    return require('./src/index.js');
+  })({
+    './src/hello.js': {
+      code: "\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.say = say;\n\nfunction say(name) {\n  return \"hello \".concat(name);\n}"
+    },
+    './src/index.js': {
+      dependencies: {
+        './hello.js': './src/hello.js'
+      },
+      // require 递归
+      code: "\"use strict\";\n\nvar _hello = require(\"./hello.js\");\n\ndocument.write((0, _hello.say)(\"webpack\"));"
+    }
+  })
+  </script>
+  
