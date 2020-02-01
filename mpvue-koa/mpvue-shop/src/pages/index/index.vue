@@ -13,13 +13,21 @@
 
 <script>
 var amapFile = require('../../utils/amap-wx.js');
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   data () {
     return {
-      cityName: '南昌'
+      
     }
   },
+  computed: {
+    ...mapState({
+      cityName: state => state.cityName
+    })
+  },
   methods: {
+    ...mapMutations(['update']),
     toMapPage () {
       let _this = this
       // 通过wx.getSetting 先查询一下用户是否授权 "scope.record"
@@ -56,7 +64,9 @@ export default {
         },
         fail: info => {
           console.log(info)
-          _this.cityName = '北京'
+          _this.update({
+            cityName: '北京'
+          })
         }
       })
     } 
