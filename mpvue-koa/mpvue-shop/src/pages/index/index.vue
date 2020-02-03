@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="brand">
-      <div class="head">
+      <div class="head" @click="tobrandList">
         品牌制造商直供
       </div>
       <div class="content">
@@ -38,10 +38,54 @@
           @click="brandDetail(item.id)">
           <div>
             <p>{{item.name}}</p>
-            <p class="price">{{item.floor_price}}</p>
+            <p class="price">{{item.floor_price}}元起</p>
           </div>
           <img :src="item.new_pic_url" />
         </div>
+      </div>
+    </div>
+    <div class="newgoods">
+      <div class="newgoods-top" @click="goodsList('new')">
+        <div class="top">
+          <p>新品首发</p>
+          <p >查看全部</p>
+        </div>
+      </div>
+      <div class="list">
+        <ul>
+          <scroll-view class="scroll-view" scroll-x="true">
+            <li v-for="(item, index) in newGoods" :key="index">
+              <img :src="item.list_pic_url" />
+              <p>{{item.name}}</p>
+              <p>{{item.goods_brief}}</p>
+              <p>￥{{item.retail_price}}</p>
+            </li>
+          </scroll-view>
+        </ul>
+      </div>
+    </div>
+    <div class="newgoods hotgoods">
+      <div class="newgoods-top" @click="goodsList('hot')">
+        <div class="top">
+          <p>
+            人气推荐
+            <span>·</span>
+            好物精选
+          </p>
+          <p>查看全部</p>
+        </div>
+      </div>
+      <div class="list">
+        <ul>
+          <scroll-view class="scroll-view" scroll-x="true">
+            <li v-for="(item, index) in hotGoods" :key="index">
+              <img :src="item.list_pic_url" />
+              <p>{{item.name}}</p>
+              <p>{{item.goods_brief}}</p>
+              <p>￥{{item.retail_price}}</p>
+            </li>
+          </scroll-view>
+        </ul>
       </div>
     </div>
   </div>
@@ -57,7 +101,9 @@ export default {
     return {
       banner: [],
       channel: [],
-      brandList: []
+      brandList: [],
+      newGoods: [],
+      hotGoods: []
     }
   },
   computed: {
@@ -122,6 +168,8 @@ export default {
       this.banner = data.banner
       this.channel = data.channel,
       this.brandList = data.brandList
+      this.newGoods = data.newGoods
+      this.hotGoods = data.hotGoods
     },
     categoryList (id) {
       wx.navgateTo({
@@ -132,6 +180,23 @@ export default {
       wx.navgateTo({
         url: 'pages/branddetail/main?id' + id
       })
+    },
+    tobrandList () {
+      wx.navigateTo({
+        url: '/pages/brandlist/main'
+      });
+    },
+    goodsList (info) {
+      
+      if (info === 'hot') {
+        wx.navigateTo({
+          url: '/pages/newgoods/main?isHot=' + 1
+        });
+      } else {
+        wx.navigateTo({
+          url: '/pages/newgoods/main?isNew=' + 1
+        });
+      }
     }
   } 
 }
