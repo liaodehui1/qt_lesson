@@ -23,11 +23,39 @@ module.exports = async (ctx) => {
   const hotGoods = await mysql('nideshop_goods')
     .column('id', 'name', 'list_pic_url', 'retail_price', 'goods_brief')
     .where({is_hot: 1}).limit(5).select()
+
+  // 专题精选
+  const topicList = await mysql('nideshop_topic').limit(3).select()
+  
+  // 类别列表 **好物
+  const categoryList = await mysql('nideshop_category').where({
+    parent_id: 0
+  }).select()
+  let newCategoryList = []
+  for(let i = 0; i < categoryList.length; i++) {
+    let item = categoryList[i]
+    let childCategoryIds = await mysql('nideshop_category').where({
+      parent_id: item.id
+    }).column('id').select()
+    childCategoryIds = childCategoryIds.map(item => item.id)
+    // 在商品中找到符合childCategoryIds的几条数据
+    const categoryGoods = await mysql('nideshop_goods')
+      .column('id', 'name', 'list_pic_url', 'retail_price')
+      .whereIn('category_id',childCategoryIds)
+      .limit(7).select()
+      newCategoryList.push({
+      'id': item.id,
+      'name': item.name,
+      'goodsList': categoryGoods
+    })
+  }
   ctx.body = {
     'banner': banner,
     'channel': channel,
     'brandList': brandList,
     'newGoods': newGoods,
-    'hotGoods': hotGoods
+    'hotGoods': hotGoods,
+    'topicList': topicList,
+    'newCategoryList': newCategoryList
   }
 }
