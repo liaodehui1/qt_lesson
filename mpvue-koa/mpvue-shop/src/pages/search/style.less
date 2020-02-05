@@ -1,0 +1,72 @@
+.search {
+  height: 100%;
+  position: relative;
+  .head {
+    height: 91rpx;
+    display: flex;
+    padding: 0 32rpx;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    div:nth-child(1) {
+      height: 59rpx;
+      display: flex;
+      align-items: center;
+      background-color: #f4f4f4;
+      img {
+        display: inline-block;
+        width: 31rpx;
+        height: 31rpx;
+        padding: 0 20rpx;
+      }
+      input {
+        display: inline-block;
+        width: 480rpx;
+        height: 59rpx;
+        margin-left: 10rpx;
+      }
+      .del {
+        width: 59rpx;
+        height: 59rpx;
+        padding: 0;
+      }
+    }
+    div:nth-child(2) {
+      flex: 1;
+      text-align: center;
+    }
+  }
+  .history {
+    background-color: #fff;
+    padding: 32rpx;
+    .t {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30rpx;
+      div:nth-child(2) {
+        width: 30rpx;
+        height: 30rpx;
+        background: url(../../../static/images/del-address.png);
+        background-size: 100% 100%;
+      }
+    }
+    .cont {
+      display: flex;
+      flex-wrap: nowrap;
+      div {
+        padding: 10rpx;
+        border: 1rpx solid #999;
+        margin: 0 30rpx 20rpx 0;
+      }
+    }
+  }
+  .hotsearch {
+    margin-top: 22rpx;
+    div.active {
+      border: 1rpx solid #b4282d;
+      color: #b4282d;
+    }
+  }
+}

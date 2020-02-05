@@ -3,7 +3,7 @@
     <!-- 头部搜索 -->
     <div class="search">
       <div @click="toMapPage">{{cityName}}</div>
-      <div>
+      <div @click="toSearch">
         <input type="text" placeholder="搜索商品" />
         <span class="icon"></span>
       </div>
@@ -185,6 +185,11 @@ export default {
         },
         complete: () => {}
       })
+    },
+    toSearch () {
+      wx.navigateTo({
+        url: '/pages/search/main'
+      });
     },
     getCityName () {
       let _this = this
