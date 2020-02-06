@@ -3,6 +3,7 @@ const { mysql } = require('../../mysql')
 // 添加搜索历史记录
 async function addhistoryAction (ctx) {
   const { openId, keyword } = ctx.request.body
+  // console.log(openId, keyword)
   const oldData = await mysql('nideshop_search_history').where({
     'user_id': openId,
     'keyword': keyword
@@ -37,7 +38,7 @@ async function indexAction (ctx) {
   }).limit(1).select()
   // 热门关键字
   const hotKeywordList = await mysql('nideshop_keywords')
-    .distinct('keyword').column('keyword') //distinct 过滤掉多余的重复记录只保留一条
+    .distinct('keyword').column('keyword', 'is_hot') //distinct 过滤掉多余的重复记录只保留一条
     .limit(10).select()
   
   const historyData = await mysql('nideshop_search_history').where({
