@@ -15,13 +15,13 @@
       <div>牙刷</div>
       <div class="nogoods">数据库暂无此类商品</div>
     </div>
-    <div class="history">
+    <div class="history" v-if="historyData.length !== 0">
       <div class="t">
         <div>历史记录</div>
         <div @click="clearHistory"></div>
       </div>
       <div class="cont">
-        <div>日式</div>
+        <div v-for="(item, index) in historyData" :key="index">{{item.keyword}}</div>
       </div>
     </div>
     <div class="history hotsearch">
@@ -30,9 +30,10 @@
         <div @click="clearHistory"></div>
       </div>
       <div class="cont">
-        <div class="active">日式</div>
-        <div>日式</div>
-        <div>日式</div>
+        <div v-for="(item, index) in hotKeywordList" :key="index"
+          :class="{active: item.is_hot}" >
+          {{item.keyword}}
+        </div>
       </div>
     </div>
   </div>
@@ -46,6 +47,7 @@ export default {
    return {
      words: '',
      openId: '',
+     defaultKeyword: '',
      hotKeywordList: [],
      historyData: []
    }
@@ -83,6 +85,7 @@ export default {
    },
    async getHotData (first) {
      const data = await get('/search/indexaction?openId=' + this.openId)
+     this.defaultKeyword = data.defaultKeyword
      this.historyData = data.historyData
      this.hotKeywordList = data.hotKeywordList
      console.log(data)

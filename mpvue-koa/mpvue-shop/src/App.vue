@@ -1,6 +1,19 @@
 <script>
 export default {
   created () {
+    let userInfo = {
+      "openId": "ocQa15F84KewfnLZrjtYjyRg1IMk",
+      "nickName": "J.O",
+      "gender": 0,
+      "language": "zh_CN",
+      "city": "Nanchang",
+      "province": "Jiangxi",
+      "country": "China",
+      "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/78vDM2vOOAiaBUATzLjJ4icpQR8PwpqGib63ibC4joVEGzmdHicLlTtiaCSneSicU9KPxibw6qcq8SFGJCspicUFtPnoNpg/132"
+    }
+    let openId = userInfo.openId
+    wx.setStorageSync('userInfo', userInfo);
+    wx.setStorageSync('openId', openId);
     // 调用API从本地缓存中获取数据
     /*
      * 平台 api 差异的处理方式:  api 方法统一挂载到 mpvue 名称空间, 平台判断通过 mpvuePlatform 特征字符串
