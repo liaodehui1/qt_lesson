@@ -1,7 +1,7 @@
 const { mysql } = require('../../mysql')
 
 // 添加搜索历史记录
-async function addhistoryAction (ctx) {
+async function addHistoryAction (ctx) {
   const { openId, keyword } = ctx.request.body
   // console.log(openId, keyword)
   const oldData = await mysql('nideshop_search_history').where({
@@ -30,6 +30,7 @@ async function addhistoryAction (ctx) {
   }
 }
 
+// 获取记录
 async function indexAction (ctx) {
   const openId = ctx.query.openId
   // 默认关键字
@@ -52,7 +53,52 @@ async function indexAction (ctx) {
   }
 }
 
+// 清空历史记录
+async function clearHistoryAction (ctx) {
+  const { openId } = ctx.request.body
+  // console.log(openId)
+  const data = await mysql('nideshop_search_history').where({
+    'user_id': openId
+  }).del()
+  // console.log(data) //删除行数
+  if (data) {
+    ctx.body = {
+      'data': '清除成功'
+    }
+  }else {
+    ctx.body = {
+      'data': null
+    }
+  }
+}
+
+// 搜索匹配内容
+async function helperAction (ctx) {
+  const keyword = ctx.query.keyword
+  let order = ctx.query.order
+  if (!order) {
+    order = ''
+    orderBy = 'id'
+  }else {
+    orderBy = 'retail_price'
+  }
+  const keywords = await mysql('nideshop_goods').where('name', 'like', `%${keyword}%`)
+    .orderBy(orderBy, order)
+    .column('id', 'name', 'list_pic_url', 'retail_price')
+    .limit(10).select()
+  if (keywords) {
+    ctx.body = {
+      keywords
+    }
+  }else {
+    ctx.body = {
+      keywords: []
+    }
+  }
+}
 module.exports = {
-  addhistoryAction,
-  indexAction
+  addHistoryAction,
+  indexAction,
+  clearHistoryAction,
+  helperAction
 }
