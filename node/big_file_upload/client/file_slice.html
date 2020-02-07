@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <input type="file" id="file">
+  <script>
+    // 请求封装
+    // 1. http并发blob上传
+    // 2. 再发送一个merge请求
+    function request ({
+      url,
+      method = 'POST',
+      data,
+      headers = {},
+      requestList
+    }) {
+      return new Promise(resolve => {
+        const xhr = new XMLHttpRequest()
+        xhr.open(method, url)
+        Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
+        xhr.send(data)
+        xhr.onload = e => {
+          resolve({
+            data: e.target.response
+          })
+        }
+      })
+    }
+    
+    // 合并请求
+    const mergeRequest = async (filename) => {
+      await request({
+        url: `http://localhost:3000/merge?filename=${filename}`,
+        method: 'GET'
+      })
+    }
+    // 文件切片
+    document.getElementById('file')
+      .addEventListener('change', async (event) => {
+        const file = event.target.files[0] // es6文件对象
+        // console.log(file)
+        // console.log(file.slice(0, 102400))
+        const file_name = file.name.split('.')[0]
+        let cur = 0, size = 0.5 * 1024 * 1024 // 1M
+        const fileChunkList = [] //blob 数组
+        while (cur < file.size) {
+          fileChunkList.push({
+            file: file.slice(cur, cur + size)
+          })
+          cur = cur + size
+        }
+        // console.log(fileChunkList)
+        const requestList = fileChunkList.map(({ file }, index) => {
+          // console.log(`${file_name}-${index}`)
+          const formData = new FormData()
+          formData.append('chunk', file)
+          formData.append('filename', `${file_name}-${index}`)
+          return { formData }
+        }).map(async ({ formData }) => request({
+          url: 'http://localhost:3000',
+          data: formData
+        }))
+        // console.log(requestList)
+        await Promise.all(requestList)
+
+        await mergeRequest(file.name)
+      })
+  </script>
+
+</body>
+</html>

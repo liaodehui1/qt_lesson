@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <img src="" alt="" id="pic" width="300"> 
+  <input type="file" id="file">
+  <script>
+    // es6 图片上传前的预览
+    document.getElementById('file')
+      .addEventListener('change', (event) => {
+        const file = event.target.files[0]
+        const URL = window.URL
+        const objectUrl = URL.createObjectURL(file)
+        console.log(objectUrl)
+        const pic = document.getElementById('pic')
+        pic.src = objectUrl
+        pic.onload = function () {
+          // 释放对象
+          URL.revokeObjectURL(objectUrl)
+        }
+      })
+  </script>
+</body>
+</html>
