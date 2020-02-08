@@ -96,6 +96,7 @@ async function helperAction (ctx) {
     }
   }
 }
+
 module.exports = {
   addHistoryAction,
   indexAction,

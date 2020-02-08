@@ -12,4 +12,6 @@ router.get('/search/indexaction', controllers.search.index.indexAction)
 router.post('/search/clearhistoryaction', controllers.search.index.clearHistoryAction) 
 router.get('/search/helperaction', controllers.search.index.helperAction)
 
+// 商品详情
+router.get('/goods/detailaction', controllers.goods.index.detailAction)
 module.exports = router
