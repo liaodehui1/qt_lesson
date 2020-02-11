@@ -19,6 +19,10 @@ server.on('request', async (req, res) => {
   if (req.url === '/verify') {
     await controller.handleVerifyUpload(req, res)
   }
+  if (req.url === '/') {
+    // 处理上传切片
+    await controller.handleFormData(req, res)
+  }
 })
 
 server.listen(3000, () => console.log('server is running on port 3000'))
