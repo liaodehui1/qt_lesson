@@ -39,37 +39,79 @@
       </div>
     </div>
     <!-- 图片展示 -->
-    <div class="detail">
+    <div class="detail" v-if="goods_desc">
       <wxParse :content="goods_desc"></wxParse>
+    </div>
+    <!-- 常见问题 -->
+    <div class="common-problem">
+      <div class="h">
+        <text class="title">常见问题</text>
+      </div>
+      <div class="b">
+        <div class="item" v-for="(item, index) in issueList" :key="index">
+          <div class="question-box">
+            <text class="spot"></text>
+            <text class="question">{{item.question}}</text>
+          </div>
+          <div class="answer">{{item.answer}}</div>
+        </div>
+      </div>
+    </div>
+    <!-- 大家都在看 -->
+    <div class="common-problem">
+      <div class="h">
+        <div class="title">大家都在看</div>
+      </div>
+      <div class="sublist">
+        <div v-for="(item, index) in productList" :key="index">
+          <img :src="item.list_pic_url" />
+          <p>{{item.name}}</p>
+          <p>￥{{item.retail_price}}</p>
+        </div>
+      </div>
+    </div>
+    <!-- footer -->
+    <div class="bottom-fixed">
+      <div class="collect-box" @click="collect">
+        <div class="collect" :class="{active: collectFlag}"></div>
+      </div>
+      <div class="car-box" @click="toCart">
+        <div class="car">
+          <span>{{allnumber}}</span>
+          <img src="/static/images/ic_menu_shoping_nor.png" />
+        </div>
+      </div>
+      <div @click="buy">立即购买</div>
+      <div @click="addCart">加入购物车</div>
     </div>
     <!-- 选择规格弹出层 -->
     <div class="pop" v-show="showpop" @click="showType"></div>
     <div class="attr-pop" :class="{fadeup: showpop}">
-        <div class="top">
-          <div class="left">
-            <img :src="info.primary_pic_url" alt="">
-          </div>
-          <div class="right">
-            <p>价格￥{{info.retail_price}}</p>
-            <p>请选择数量</p>
-          </div>
-          <div class="close" @click="showType">x</div>
+      <div class="top">
+        <div class="left">
+          <img :src="info.primary_pic_url" alt />
         </div>
-        <div class="b">
-          <p>数量</p>
-          <div class="count">
-            <div class="cut" @click="reduce">-</div>
-            <input type="text" class="number" v-model="number" disabled="true">
-            <div class="add" @click="add">+</div>
-          </div>
+        <div class="right">
+          <p>价格￥{{info.retail_price}}</p>
+          <p>请选择数量</p>
+        </div>
+        <div class="close" @click="showType">x</div>
+      </div>
+      <div class="b">
+        <p>数量</p>
+        <div class="count">
+          <div class="cut" @click="reduce">-</div>
+          <input type="text" class="number" v-model="number" disabled="true" />
+          <div class="add" @click="add">+</div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { get } from "../../utils/index";
-import wxParse from 'mpvue-wxparse';
+import { get, post } from "../../utils/index";
+import wxParse from "mpvue-wxparse";
 
 export default {
   data() {
@@ -77,16 +119,21 @@ export default {
       gallery: [], // banner
       id: "",
       openId: "",
-      info: null,
+      info: {},
       brand: {},
       showpop: false,
       number: 0,
       attribute: [],
-      goods_desc: ''
+      goods_desc: "",
+      issueList: [],
+      productList: [],
+      collectFlag: false,
+      allnumber: 0,
+      goodsId: ''
     };
   },
   // 商品分享
-  onShareAppMessage () {
+  onShareAppMessage() {
     return {
       title: this.info.name,
       path: "/pages/goods/main?id" + this.info.id,
@@ -107,20 +154,71 @@ export default {
       this.info = data.info;
       this.gallery = data.gallery;
       this.attribute = data.attribute;
-      this.goods_desc = data.info.goods_desc
+      this.goods_desc = data.info.goods_desc;
+      this.issueList = data.issue;
+      this.productList = data.productList;
+      this.collectFlag = data.collected;
+      this.allnumber = data.allnumber;
+      this.goodsId = data.info.id
     },
-    showType () {
-      this.showpop = !this.showpop
+    showType() {
+      this.showpop = !this.showpop;
     },
-    reduce () {
+    reduce() {
       if (this.number >= 1) {
-        this.number -= 1
-      }else {
-        return false
+        this.number -= 1;
+      } else {
+        return false;
       }
     },
-    add () {
-      this.number += 1
+    add() {
+      this.number += 1;
+    },
+    async collect() {
+      this.collectFlag = !this.collectFlag;
+      const data = await post("/collect/addcollect", {
+        openId: this.openId,
+        goodsId: this.goodsId
+      });
+      console.log(data);
+    },
+    toCart() {
+      // 跳到导航栏
+      wx.switchTab({
+        url: "/pages/cart/main"
+      });
+    },
+    async buy() {
+      if (this.showpop) {
+        if (this.number === 0) {
+          wx.showToast({
+            title: "请选择商品数量",
+            icon: "none",
+            duration: 2000,
+            mask: true,
+            success: result => {},
+            fail: () => {},
+            complete: () => {}
+          });
+        }else {
+          const data = await post('/order/submitaction', {
+            goodsId: this.goodsId,
+            openId: this.openId,
+            allPrice: this.info.retail_price * this.number
+          })
+          // console.log(data)
+          if (data) {
+            wx.navigateTo({
+              url: '/pages/order/main'
+            });
+          }
+        }
+      }else {
+        this.showpop = true
+      }
+    },
+    addCart () {
+      
     }
   },
   components: {
@@ -130,6 +228,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url('~mpvue-wxparse/src/wxParse.css');
+@import url("~mpvue-wxparse/src/wxParse.css");
 @import "./style.less";
 </style>

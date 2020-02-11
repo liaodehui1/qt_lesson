@@ -10,7 +10,8 @@
     "pages/my/main",
     "pages/brandlist/main",
     "pages/newgoods/main",
-    "pages/topicdetail/main"
+    "pages/topicdetail/main",
+    "pages/order/main"
   ],
   "permission": {
     "scope.userLocation": {
