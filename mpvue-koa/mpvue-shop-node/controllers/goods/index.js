@@ -23,10 +23,44 @@ async function detailAction (ctx) {
     .column('nideshop_goods_attribute.value', 'nideshop_attribute.name')
     .select()
 
+  // 常见问题
+  const issue = await mysql('nideshop_goods_issue').select()
+
+  // 大家都在看
+  const productList = await mysql('nideshop_goods').where({
+    'category_id': info[0].category_id
+  }).select()
+
+  // 判断是否收藏过
+  let collected = false
+  const isCollect = await mysql('nideshop_collect').where({
+    'user_id': openId,
+    'value_id': goodsId
+  }).select()
+  if (isCollect.length > 0) {
+    collected = true
+  }
+
+  // 该用户的购物车是否含有此商品
+  let allnumber = 0
+  const oldNumber = await mysql('nideshop_cart').where({
+    'user_id': openId
+  }).column('number').select()
+  if (oldNumber.length > 0) {
+    for(let i = 0; i < oldNumber.length; i++) {
+      const element = oldNumber[i]
+      allnumber += element.number
+    }
+  }
+
   ctx.body = {
     info: info[0] || {},
     gallery,
-    attribute
+    attribute,
+    issue,
+    productList,
+    collected,
+    allnumber
   }
 }
 
