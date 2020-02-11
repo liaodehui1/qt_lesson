@@ -8,6 +8,32 @@
       <div>计算文件hash</div>
       <el-progress :percentage="hashPercentage"></el-progress>
     </div>
+    <div>总进度</div>
+    <el-progress :percentage="fileUploadPercentage"></el-progress>
+    <!-- 多个切片 -->
+    <el-table :data="data">
+      <el-table-column 
+        prop="hash"
+        label="切片hash"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        label="大小(kb)"
+        align="center"
+        width="120">
+        <!-- 解构 -->
+        <template v-slot="{ row }">
+          {{row.size | transformByte}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="进度"
+        align="center">
+        <template v-slot="{ row }">
+          <el-progress :percentage="row.percentage" color="#909399"></el-progress>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -21,13 +47,39 @@ const SIZE = 0.5 * 1024 * 1024
 
 export default {
   name: 'App',
+  filters: {
+    // 过滤 格式化
+    transformByte (val) {
+      return Number((val / 1024).toFixed(0))
+    }
+  },
+  computed: {
+    uploadPercentage () {
+      if (!this.container.file || !this.data.length) return 0;
+      const loaded = this.data
+        .map(item => item.size * item.percentage)
+        .reduce(( pre, cur ) => pre + cur)
+      return parseInt((loaded / this.container.file.size).toFixed(2))
+    }
+  },
+  watch: {
+    uploadPercentage (now) {
+      if (now > this.fileUploadPercentage) {
+        console.log(now)
+        this.fileUploadPercentage = now
+      }
+    }
+  },
   data: () => ({
     container: { // 将我们的任务放到一起
       file: null,
       hash: '' // 哈希
     },
     status: Status.wait,
-    hashPercentage: 0
+    hashPercentage: 0,
+    data: [], // 上传数据
+    requestList: [], // 请求列表
+    fileUploadPercentage: 0
   }),
   methods: {
     handleFileChange (e) {
@@ -49,6 +101,21 @@ export default {
         this.container.file.name,
         this.container.hash
       )
+      // 上传过
+      if (!shouldUpload) {
+        this.$message.success('秒传：上传成功')
+        this.status = Status.wait
+        return;
+      }
+      this.data = fileChunkList.map(({ file }, index) => ({
+        fileHash: this.container.hash,
+        index,
+        hash: this.container.hash + '-' + index,
+        chunk: file,
+        size: file.size,
+        percentage: uploadedList.includes(index) ? 100 : 0 // 当前切片是否上传
+      }))
+      await this.uploadChunks(uploadedList) // 上传切片
     },
     createFileChunk (file, size = SIZE) {
       const fileChunkList = []
@@ -90,22 +157,58 @@ export default {
       })
       return JSON.parse(data)
     },
+    async uploadChunks (uploadedList = []) {
+      const requestList = this.data.map(({ chunk, hash, index }) => {
+        const formData = new FormData()
+        formData.append('chunk', chunk)
+        formData.append('hash', hash)
+        formData.append('filename', this.container.file.name)
+        formData.append('fileHash', this.container.hash)
+        return { formData, index }
+      }).map(async ({ formData, index }) => 
+        this.request({
+          url: 'http://localhost:3000',
+          data: formData,
+          onProgress: this.createProgressHandle(this.data[index]),
+          requestList: this.requestList
+        })
+      )
+      await Promise.all(requestList)
+      console.log('可以发送合并请求了')
+    },
+    // 上传进度
+    createProgressHandle (item) {
+      return e => {
+        item.percentage = parseInt(String(e.loaded / e.total * 100))
+      }
+    },
     request ({
       url,
       method = 'POST',
       data,
+      onProgress = e => e,
       headers = {},
       requestList
     }) {
       return new Promise(resolve => {
         const xhr = new XMLHttpRequest()
         xhr.open(method, url)
+        // 上传进度
+        xhr.upload.onprogress = onProgress
         Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
         xhr.send(data)
         xhr.onload = e => {
+          if (requestList) {
+            // xhr使命完成
+            const xhrIndex = requestList.findIndex(item => item == xhr)
+            requestList.splice(xhrIndex, 1)
+          }
           resolve({
             data: e.target.response
           })
+        }
+        if (requestList) {
+          requestList.push(xhr)
         }
       })
     }
