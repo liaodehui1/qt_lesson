@@ -3,6 +3,8 @@
     <div>
       <input type="file" @change="handleFileChange">
       <el-button @click="handleUpload">上传</el-button>
+      <el-button @click="handlePause">暂停</el-button>
+      <el-button @click="handleResume">恢复</el-button>
     </div>
     <div>
       <div>计算文件hash</div>
@@ -65,7 +67,7 @@ export default {
   watch: {
     uploadPercentage (now) {
       if (now > this.fileUploadPercentage) {
-        console.log(now)
+        // console.log(now)
         this.fileUploadPercentage = now
       }
     }
@@ -87,6 +89,10 @@ export default {
       // 分割文件
       const [ file ] = e.target.files
       // console.log(file)
+
+      this.resetData()
+      // 重置data结构为初始状态
+      Object.assign(this.$data, this.$options.data())
       this.container.file = file
     },
     async handleUpload (e) {
@@ -103,7 +109,7 @@ export default {
       )
       // 上传过
       if (!shouldUpload) {
-        this.$message.success('秒传：上传成功')
+        this.$message.success('已经上传')
         this.status = Status.wait
         return;
       }
@@ -113,7 +119,7 @@ export default {
         hash: this.container.hash + '-' + index,
         chunk: file,
         size: file.size,
-        percentage: uploadedList.includes(index) ? 100 : 0 // 当前切片是否上传
+        percentage: 0
       }))
       await this.uploadChunks(uploadedList) // 上传切片
     },
@@ -158,7 +164,15 @@ export default {
       return JSON.parse(data)
     },
     async uploadChunks (uploadedList = []) {
-      const requestList = this.data.map(({ chunk, hash, index }) => {
+      const requestList = this.data
+        .filter((item) => {
+          if (uploadedList.includes(item.hash)) {
+            item.percentage = 100
+          }else {
+            return true
+          }
+        })
+        .map(({ chunk, hash, index }) => {
         const formData = new FormData()
         formData.append('chunk', chunk)
         formData.append('hash', hash)
@@ -175,12 +189,50 @@ export default {
       )
       await Promise.all(requestList)
       console.log('可以发送合并请求了')
+      // 之前上传的切片数量（暂停了） + 本次上传的切片数量 = 所有切片数量时
+      if (uploadedList.length + requestList.length === this.data.length) {
+        await this.mergeRequest()
+      }
     },
     // 上传进度
     createProgressHandle (item) {
       return e => {
         item.percentage = parseInt(String(e.loaded / e.total * 100))
       }
+    },
+    handlePause () {
+      this.status = Status.pause // 状态暂停
+      this.resetData()
+    },
+    resetData () {
+      this.requestList.forEach(xhr => xhr ? xhr.abort() : null)
+      this.requestList = []
+      if (this.container.worker) { // 正在进行hash计算
+        this.container.worker.onmessage = null
+      }
+    },
+    async handleResume () {
+      this.status = Status.uploading
+      const { uploadedList } = await this.verifyUpload(
+        this.container.file.name,
+        this.container.hash
+      )
+      await this.uploadChunks(uploadedList)
+    },
+    async mergeRequest () {
+      await this.request({
+        url: 'http://localhost:3000/merge',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+          size: SIZE,
+          fileHash: this.container.hash,
+          filename: this.container.file.name
+        })
+      })
+      this.$message.success('上传成功')
+      this.status = Status.wait
     },
     request ({
       url,
@@ -199,7 +251,7 @@ export default {
         xhr.send(data)
         xhr.onload = e => {
           if (requestList) {
-            // xhr使命完成
+            // xhr使命完成 切除已完成切片上传请求
             const xhrIndex = requestList.findIndex(item => item == xhr)
             requestList.splice(xhrIndex, 1)
           }
