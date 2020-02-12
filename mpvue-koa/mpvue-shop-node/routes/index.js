@@ -21,4 +21,7 @@ router.post('/collect/addcollect', controllers.collect.index.addCollect)
 // 订单相关的接口
 router.post('/order/submitaction', controllers.order.index.submitAction)
 
+// 购物车相关接口
+router.post('/cart/addcart', controllers.cart.index.addCart)
+
 module.exports = router
