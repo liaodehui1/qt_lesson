@@ -23,6 +23,9 @@ server.on('request', async (req, res) => {
     // 处理上传切片
     await controller.handleFormData(req, res)
   }
+  if (req.url === '/merge') {
+    await controller.handleMerge(req, res)
+  }
 })
 
 server.listen(3000, () => console.log('server is running on port 3000'))
