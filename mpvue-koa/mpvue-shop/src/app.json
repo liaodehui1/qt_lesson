@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/order/main",
     "pages/search/main",
     "pages/goods/main",
     "pages/index/main",
-    
     "pages/topic/main",
     "pages/category/main",
     "pages/cart/main",
@@ -12,7 +12,8 @@
     "pages/brandlist/main",
     "pages/newgoods/main",
     "pages/topicdetail/main",
-    "pages/order/main"
+    "pages/addaddress/main",
+    "pages/addressSelect/main"
   ],
   "permission": {
     "scope.userLocation": {

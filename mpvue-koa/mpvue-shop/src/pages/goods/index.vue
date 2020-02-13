@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { get, post } from "../../utils/index";
+import { get, post, getStoregeOpenId } from "../../utils/index";
 import wxParse from "mpvue-wxparse";
 
 export default {
@@ -141,7 +141,7 @@ export default {
     };
   },
   mounted() {
-    this.openId = wx.getStorageSync("openId") || "";
+    this.openId = getStoregeOpenId();
     this.id = this.$root.$mp.query.id
     this.goodsDetail();
   },
