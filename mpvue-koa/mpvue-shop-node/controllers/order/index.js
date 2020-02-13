@@ -44,6 +44,39 @@ async function submitAction (ctx) {
   }
 }
 
+async function detailAction (ctx) {
+  const { openId, addressId } = ctx.query
+
+  const orderDetail = await mysql('nideshop_order').where({
+    'user_id': openId
+  }).select()
+
+  let goods_id = orderDetail.length ? orderDetail[0].goods_id.split(',') : []
+  const list = await mysql('nideshop_cart').andWhere({
+    'user_id': openId
+  }).whereIn('goods_id', goods_id).select()
+
+  // 收货地址
+  let addressList = []
+  if (addressId) {
+    addressList = await mysql('nideshop_address').where({
+      'user_id': openId,
+      'id': addressId
+    }).orderBy('is_default', 'desc').select()
+  }else {
+    addressList = await mysql('nideshop_address').where({
+      'user_id': openId
+    }).orderBy('is_default', 'desc').select()
+  }
+
+  ctx.body = {
+    price: orderDetail[0].allprice,
+    goodsList: list,
+    addressList: addressList[0] || {}
+  }
+}
+
 module.exports = {
-  submitAction
+  submitAction,
+  detailAction
 }

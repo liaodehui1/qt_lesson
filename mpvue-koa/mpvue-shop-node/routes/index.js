@@ -20,7 +20,7 @@ router.post('/collect/addcollect', controllers.collect.index.addCollect)
 
 // 订单相关的接口
 router.post('/order/submitaction', controllers.order.index.submitAction)
-
+router.get('/order/detailaction', controllers.order.index.detailAction)
 // 购物车相关接口
 router.post('/cart/addcart', controllers.cart.index.addCart)
 
