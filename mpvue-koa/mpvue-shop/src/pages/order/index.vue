@@ -52,7 +52,7 @@
     </div>
     <div class="bottom">
       <div>实付：￥{{allPrice}}</div>
-      <div class="pay">支付</div>
+      <div class="pay" @click="pay">支付</div>
     </div>
   </div>
 </template>
@@ -71,7 +71,7 @@ export default {
     };
   },
   onShow () {
-    this.addressId = wx.getStorageSync('getStoregeOpenId') || ''
+    this.addressId = wx.getStorageSync('addressId') || ''
     this.openId = getStoregeOpenId();
     this.getDetail()
   },
@@ -98,6 +98,14 @@ export default {
       this.allPrice = data.goodsList
         .map(item => item.retail_price * item.number)
         .reduce((pre, cur) => pre + cur)
+    },
+    pay () {
+      wx.showToast({
+        title: '支付功能尚未开发',
+        icon: 'none',
+        duration: 1500,
+        mask: false
+      });
     }
   }
 };
