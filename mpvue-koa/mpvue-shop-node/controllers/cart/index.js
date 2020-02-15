@@ -42,6 +42,21 @@ async function addCart (ctx) {
     data: 'success'
   }
 }
+
+// 购物车
+async function cartList (ctx) {
+  const { openId } = ctx.query
+
+  const cartList = await mysql('nideshop_cart').where({
+    'user_id': openId
+  }).select()
+
+  ctx.body = {
+    cartList
+  }
+}
+
 module.exports = {
-  addCart
+  addCart,
+  cartList
 }
