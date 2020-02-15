@@ -11,7 +11,7 @@
             </div>
             <div class="info" @click="selAddress(item.id)">
               <p>{{item.mobile}}</p>
-              <p>{{item.address}}{{item.address_detail}}</p>
+              <p>{{item.address}} {{item.address_detail}}</p>
             </div>
             <div @click="toDetail(item.id)"></div>
           </div>
@@ -38,7 +38,7 @@ export default {
       listData: []
     };
   },
-  mounted () {
+  onShow () {
     this.openId = getStoregeOpenId()
     this.getAddressList()
   },
@@ -77,7 +77,7 @@ export default {
       const data = await get('/address/getlistaction', {
         openId: this.openId
       })
-      console.log(data)
+      // console.log(data)
       this.listData = data.addressList
     }
   }
