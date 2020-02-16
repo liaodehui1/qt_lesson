@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+    }
+    .out {
+      background-color: blue;
+      width: 100%;
+      margin: 0 10px;
+      text-align: center;
+      font-size: 20px;
+      /* height: 50%; 相对于父容器高度计算*/
+        /* padding 百分比相对于width */
+    }
+    .in {
+      height: 0;
+      padding: 25% 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- A在屏幕中间 -->
+  <!-- A距离左右10px -->
+  <!-- A内的A font-size=20px,并且水平垂直居中 -->
+  <!-- A的宽度为高度的2倍 -->
+  <div class="out">
+    <div class="in">
+      A
+    </div>
+  </div>
+</body>
+</html>
