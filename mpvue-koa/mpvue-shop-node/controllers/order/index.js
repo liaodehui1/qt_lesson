@@ -2,7 +2,6 @@ const { mysql } = require('../../mysql')
 
 async function submitAction (ctx) {
   const { openId, goodsId, allPrice } = ctx.request.body
-
   // 是否存在订单
   const isOrder = await mysql('nideshop_order').where({
     'user_id': openId,
@@ -10,20 +9,20 @@ async function submitAction (ctx) {
   }).select()
   if (isOrder.length > 0) {
     const data = await mysql('nideshop_order').where({
-      'user_id': openId,
-      'goods_id': goodsId
+      'id': isOrder[0].id
     }).update({
-      // 'user_id': openId,
-      // 'goods_id': goodsId,
       'allPrice': allPrice
     })
+    // console.log(data) // 更新行数
     if (data) {
       ctx.body = {
-        data: true
+        status: true,
+        id: isOrder[0].id
       }
     }else {
       ctx.body = {
-        data: false
+        status: false,
+        data: null
       }
     }
   }else {
@@ -32,23 +31,27 @@ async function submitAction (ctx) {
       'goods_id': goodsId,
       'allPrice': allPrice
     })
+    // console.log(data) // 该行[id]
     if (data) {
       ctx.body = {
-        data: true
+        status: true,
+        id: data
       }
     }else {
       ctx.body = {
-        data: false
+        status: false,
+        data: null
       }
     }
   }
 }
 
 async function detailAction (ctx) {
-  const { openId, addressId } = ctx.query
-
+  const { openId, addressId, id } = ctx.query
+  // console.log(id)
   const orderDetail = await mysql('nideshop_order').where({
-    'user_id': openId
+    'user_id': openId,
+    'id': id
   }).select()
 
   let goods_id = orderDetail.length ? orderDetail[0].goods_id.split(',') : []
