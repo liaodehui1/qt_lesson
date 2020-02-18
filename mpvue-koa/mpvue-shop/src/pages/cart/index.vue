@@ -78,8 +78,28 @@ export default {
       console.log(data);
       this.cartList = data.cartList
     },
-    orderDown () {
-      
+    async orderDown () {
+      if (this.listIds.length === 0) {
+        wx.showToast({
+          title: '请选择商品',
+          icon: 'none',
+          duration: 1500
+        });
+        return false
+      }
+      let newgoods = this.listIds.filter(item => item)
+      let goodsId = newgoods.join(',')
+      const data = await post('/order/submitaction', {
+        goodsId,
+        openId: this.openId,
+        allPrice: this.allPrice
+      })
+      // console.log(data)
+      if (data.status) {
+        wx.navigateTo({
+          url: '/pages/order/main?id='+ data.id
+        });
+      }
     }
   },
   computed: {

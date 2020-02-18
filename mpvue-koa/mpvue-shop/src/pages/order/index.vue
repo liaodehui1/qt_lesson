@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="cartlist">
-      <div class="item" v-for="(item, index) in goodsList" :key="index">
+      <div class="item" v-for="(item, index) in listData" :key="index">
         <div class="con">
           <div class="left">
             <div class="img">
@@ -67,10 +67,15 @@ export default {
       allPrice: 0,
       openId: '',
       addressId: '',
-      listData: []
+      listData: [],
+      id: 0
     };
   },
   onShow () {
+    this.id = this.$root.$mp.query.id
+    this.order = [JSON.parse(this.$root.$mp.query.order)]
+    console.log('order----', this.order)
+    // console.log(this.id)
     this.addressId = wx.getStorageSync('addressId') || ''
     this.openId = getStoregeOpenId();
     this.getDetail()
@@ -89,15 +94,26 @@ export default {
     async getDetail () {
       const data = await get('/order/detailaction', {
         openId: this.openId,
+        id: this.id,
         addressId: this.addressId
       })
-      // console.log(data)
+      console.log(data)
       this.address = data.addressList
       // this.allPrice = data.price
-      this.listData = data.goodsList
-      this.allPrice = data.goodsList
+      // this.order存在则是从goods页面直接购买
+      if (this.order.length) {
+        this.listData = this.order
+      }else {
+        this.listData = data.goodsList
+      }
+      
+      if (this.order.length) {
+        this.allPrice = this.order[0].number * this.order[0].retail_price
+      }else {
+         this.allPrice = data.goodsList
         .map(item => item.retail_price * item.number)
         .reduce((pre, cur) => pre + cur)
+      }
     },
     pay () {
       wx.showToast({

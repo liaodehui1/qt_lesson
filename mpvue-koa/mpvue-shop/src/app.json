@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/cart/main",
     "pages/addressSelect/main",
     "pages/order/main",
     "pages/search/main",
     "pages/goods/main",
-    "pages/index/main",
     "pages/topic/main",
     "pages/category/main",
     "pages/mappage/main",

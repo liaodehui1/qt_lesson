@@ -208,9 +208,17 @@ export default {
             allPrice: this.info.retail_price * this.number
           })
           // console.log(data)
-          if (data) {
+          if (data.status) {
+            let order = {
+              number: this.number,
+              user_id: this.openId,
+              goods_id: this.info.id,
+              goods_name: this.info.name,
+              retail_price: this.info.retail_price,
+              list_pic_url: this.info.list_pic_url
+            }
             wx.navigateTo({
-              url: '/pages/order/main'
+              url: `/pages/order/main?id=${data.id}&order=${JSON.stringify(order)}`
             });
           }
         }
